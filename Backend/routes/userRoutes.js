@@ -9,7 +9,12 @@ router.post('/register',[
     //similarly for name but name is in the form of object so we have to seperate it
     body('fullname.firstname').isLength({min : 3}).withMessage('First name must be 3 character long'),
     body('password').isLength({min : 6}).withMessage('Password must be 6 character long'),
-],userController.registerController)
+],userController.registerController);
+
+router.post('/login',[
+    body('email').isEmail().withMessage("Invalid Email"),
+    body('password').isLength({min : 6}).withMessage('Password must be 6 character long'),
+],userController.loginController)
 
 
 module.exports = router;
