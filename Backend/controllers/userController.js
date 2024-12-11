@@ -54,5 +54,9 @@ module.exports.loginController = async(req,res,next)=>{
     //if everything is right then we will generate token.
     const token = user.generateAuthToken();
 
-    return res.status(201).json({token,user});
+    return res.status(200).json({token,user});
+}
+
+module.exports.getUserProfile = async(req,res,next)=>{
+    res.status(200).json(req.user)
 }
