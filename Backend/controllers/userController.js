@@ -2,6 +2,7 @@ const { json } = require('express');
 const userModel = require('../models/userModel');
 const userService = require('../services/userServices')
 const {validationResult} = require('express-validator')
+const blacklistTokenModel = require('../models/blacklistTokenModel');
 
 module.exports.registerController = async(req,res,next)=>{
     const errors = validationResult(req); //agr kuch bi error hai request(jo hamne routes me dali hai) me then set it to error variable.
@@ -54,9 +55,22 @@ module.exports.loginController = async(req,res,next)=>{
     //if everything is right then we will generate token.
     const token = user.generateAuthToken();
 
+    res.cookie('token',token);//set the token in cookie also.
+
     return res.status(200).json({token,user});
 }
 
 module.exports.getUserProfile = async(req,res,next)=>{
     res.status(200).json(req.user)
+}
+
+module.exports.logoutController = async (req,res,next) => {
+    res.clearCookie('token');
+    
+    //we have to clear token also
+    const token = req.cookies.token || (req.headers.authorization && req.headers.authorization?.split(' ')[1]);
+
+    await blacklistTokenModel.create({token});
+
+    res.status(200).json({ message:'Logged out' });
 }
