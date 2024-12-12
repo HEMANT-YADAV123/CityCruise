@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
     fullname:{
         firstname:{
             type: String,
-            require:[true,'First name is required'],
+            required:[true,'First name is required'],
             minlength: [3,'First name should be alteast 3 character long'],
         } ,
         lastname:{
@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         unique: [true,'email is already registered'],
-        require: true,
+        required: true,
         lowercase: true,
         minlength: [5,"email must be 5 character long"]
     },

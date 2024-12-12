@@ -1,4 +1,3 @@
-const { json } = require('express');
 const userModel = require('../models/userModel');
 const userService = require('../services/userServices')
 const {validationResult} = require('express-validator')
@@ -12,6 +11,11 @@ module.exports.registerController = async(req,res,next)=>{
     }
     
     const { fullname,email,password } = req.body;
+    const isUserAlreadyExists = await userModel.findOne({email});
+    if(isUserAlreadyExists)
+    {
+        return res.status(400).json({message: 'User Already exist'});
+    }
     const hashedPassword = await userModel.hashPassword(password);//hash the password.
     
     //if everything is right then create user 
