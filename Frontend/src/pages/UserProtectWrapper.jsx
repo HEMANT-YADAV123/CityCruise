@@ -16,7 +16,7 @@ const UserProtectWrapper = ({children}) => {
   //   navigate('login');
   // }
 
-    useEffect(()=>{ 
+    useEffect(()=>{  //The useEffect ensures that this token check happens reactively whenever the token state changes.
       if(!token)
         {
           navigate('/login');
