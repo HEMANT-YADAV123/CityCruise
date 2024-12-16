@@ -1,24 +1,37 @@
-import React, { useState } from 'react'
+import React, { useState ,useContext} from 'react'
 import loginlogo from '../assets/CityCruise__3_-removebg-preview.png'
-import { Link } from 'react-router-dom'
+import { Link ,useNavigate} from 'react-router-dom'
+import axios from 'axios'
+import {UserDataContext} from '../context/UserContext'
+
 const UserSignup = () => {
     const [email,setEmail] = useState('');  
     const [password,setPassword] = useState(''); 
     const [firstname,setFirstname] = useState('');  
     const [lastname,setLastname] = useState(''); 
-    const [userData,setUserData] = useState({}); 
+    const [ userData, setUserData ] = useState({});
+    const navigate = useNavigate();
+    const {user,setUser} = useContext(UserDataContext); 
 
-const submitHandler = (e)=>{
+const submitHandler = async(e)=>{
     e.preventDefault();
-    setUserData({
-        fullName: {
-            firstname: firstname,
-            lastname: lastname
-        },
-        email: email,
-        password: password,
-    })
+    const newUser = {
+            fullname: {
+                firstname: firstname,
+                lastname: lastname
+            },
+            email: email,
+            password: password,
+        }
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`,newUser);
 
+    if(response.status === 201)
+    {
+        const data = response.data;
+        setUser(data.user);
+        localStorage.setItem('token',data.token);
+        navigate('/home')
+    }
     setEmail('')
     setPassword('')
     setFirstname('')
@@ -68,7 +81,7 @@ const submitHandler = (e)=>{
                 type="password" 
                 placeholder='password'
                 />
-                <button className='bg-[#111] text-[#fff] font-semibold mb-3 rounded px-4 py-2 w-full text-lg placeholder:text-base'>SignUp</button>
+                <button className='bg-[#111] text-[#fff] font-semibold mb-3 rounded px-4 py-2 w-full text-lg placeholder:text-base'>Create Account</button>
             </form>
 
             <p className='text-center'>Already have a account? <Link to='/login' className='text-blue-600'> Login here </Link></p>

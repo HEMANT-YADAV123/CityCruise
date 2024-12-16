@@ -3,9 +3,9 @@ export const UserDataContext = createContext();
 
 const UserContext = ({children}) => {
     // const user = "sarthak"
-    const [user,setuser] = useState({
+    const [user,setUser] = useState({
         email: '',
-        fullName:{
+        fullname:{
             firstname: '',
             lastname: ''
         }
@@ -13,7 +13,7 @@ const UserContext = ({children}) => {
   return (
     <div>
         {/* i have created a user with name sarthak now if i want to use this user in any of the file then i app.js*/}
-      <UserDataContext.Provider value={[user,setuser]}> 
+      <UserDataContext.Provider value={{user,setUser}}> 
         {children}
       </UserDataContext.Provider>
     </div>

@@ -1,18 +1,37 @@
-import React, { useState } from 'react'
+import React, { useState,useContext } from 'react'
 import loginlogo from '../assets/CityCruise__3_-removebg-preview.png'
 import { Link } from 'react-router-dom'
+import { UserDataContext } from '../context/UserContext'
+import {useNavigate} from 'react-router-dom'
+import axios from 'axios'
 
 const UserLogin = () => {
-  const [email,setEmail] = useState('');  
-  const [password,setPassword] = useState(''); 
-  const [userData,setUserData] = useState({}); 
+const [email,setEmail] = useState('');  
+const [password,setPassword] = useState(''); 
+const [userData,setUserData] = useState({}); 
 
-  const submitHandler = (e)=>{
+const {user , setUser}  = useContext(UserDataContext)
+const navigate = useNavigate();
+
+
+
+const submitHandler = async(e)=>{
     e.preventDefault();
-    setUserData({
-        email:email,
-        password:password
-    })
+    const userData = {
+        email: email,
+        password: password
+    }
+
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`,userData)
+
+    if(response.status === 200)
+    {
+        const data = response.data;
+        setUser(data.user);//set the user with the fields we have provided.
+        //and also store the token.
+        localStorage.setItem('token',data.token);//take the token from data.token and set it into 'token' 
+        navigate('/home')
+    }
     setEmail('')
     setPassword('')    
   }
