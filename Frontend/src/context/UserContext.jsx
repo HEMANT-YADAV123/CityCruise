@@ -12,7 +12,7 @@ const UserContext = ({children}) => {
     })
   return (
     <div>
-        {/* i have created a user with name sarthak now if i want to use this user in any of the file then i app.js*/}
+        {/* i have created a user with name sarthak now if i want to use this user in any of the file then in app.js*/}
       <UserDataContext.Provider value={{user,setUser}}> 
         {children}
       </UserDataContext.Provider>
