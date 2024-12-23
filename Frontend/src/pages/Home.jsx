@@ -1,13 +1,11 @@
 import React, { useRef, useState } from 'react'
 import logo from '../assets/CityCruise__3_-removebg-preview.png'
 import map from '../assets/map.png.png'
-import car from '../assets/car.png'
-import bike from '../assets/bike.png'
-import auto from '../assets/auto.png'
 import {useGSAP} from '@gsap/react'//gsap is an animation library and useGSAP ias a hook used for gsap
 import gsap from 'gsap'
 import 'remixicon/fonts/remixicon.css'
 import LocationSearchPanel from '../components/LocationSearchPanel'
+import VehiclePanel from '../components/VehiclePanel'
 
 const Home = () => {
   const [pickup,setPickup] = useState('');
@@ -106,35 +104,7 @@ const Home = () => {
         </div>
       </div>
       <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-10 pt-14'>
-        <h5 onClick={()=>{setVehiclePanel(false)}} className='p-1 text-center w-[93%] absolute top-0'><i className="text-3xl text-gray-200 ri-arrow-down-wide-line"></i></h5>    
-          <h3 className='text-2xl font-semibold mb-5'>Choose a Vehicle</h3>
-            <div className='flex border-2 active:border-black mb-2 rounded-xl w-full p-3 items-center justify-between'>
-              <img className='h-12' src={car} alt="" />
-              <div className='w-1/2 ml-2'>
-                <h4 className='font-medium text-base'>CruiserGo <span><i className="ri-user-3-fill">4</i></span></h4>
-                <h5 className='font-medium text-sm'>2 min away</h5>
-                <p className='font-normal text-xs text-gray-600'>Affordable, compact rides</p>
-              </div>
-              <h2 className='text-lg font-semibold'>₹193.20</h2>
-            </div>
-            <div className='flex border-2 active:border-black mb-2 rounded-xl w-full p-3 items-center justify-between'>
-              <img className='h-12' src={bike} alt="" />
-              <div className='w-1/2'>
-                <h4 className='font-medium text-base'>Moto <span><i className="ri-user-3-fill">1</i></span></h4>
-                <h5 className='font-medium text-sm'>3 min away</h5>
-                <p className='font-normal text-xs text-gray-600'>Affordable, Motorcycle rides</p>
-              </div>
-              <h2 className='text-lg font-semibold'>₹65.3</h2>
-            </div>
-            <div className='flex border-2 active:border-black mb-2 rounded-xl w-full p-3 items-center justify-between'>
-              <img className='h-12' src={auto} alt="" />
-              <div className='w-1/2 ml-2'>
-                <h4 className='font-medium text-base'>CruiserAuto <span><i className="ri-user-3-fill">3</i></span></h4>
-                <h5 className='font-medium text-sm'>2 min away</h5>
-                <p className='font-normal text-xs text-gray-600'>Affordable, auto rides</p>
-              </div>
-              <h2 className='text-lg font-semibold'>₹110.4</h2>
-            </div>
+            <VehiclePanel setVehiclePanel={setVehiclePanel}/>
       </div>
     </div>
   )
