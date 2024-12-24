@@ -4,6 +4,7 @@ import logo from '../assets/CityCruise__3_-removebg-preview.png'
 
 import { Link } from 'react-router-dom'
 import CaptainDetails from './CaptainDetails'
+import RidePopUp from '../components/RidePopUp'
 
 const CaptainHome = () => {
   return (
@@ -19,6 +20,10 @@ const CaptainHome = () => {
       </div>
       <div className='h-2/5 p-6'>
           <CaptainDetails/>
+      </div>
+
+      <div className='fixed w-full z-10 bottom-0 bg-white px-3 py-10 pt-12'>
+           <RidePopUp/>
       </div>
     </div>
   )
