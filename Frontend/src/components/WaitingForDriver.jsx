@@ -9,7 +9,7 @@ const WaitingForDriver = (props) => {
               <img className='h-12' src={car} alt="" />
               <div className='text-right'>
                 <h2 className='text-lg font-medium'>Sarthak</h2>
-                <h4 className='text-xl font-semiboldc -mt-1 -mb-1'>RJ14 12AD 345</h4>
+                <h4 className='text-xl font-semibold -mt-1 -mb-1'>RJ14 12AD 345</h4>
                 <p className='font-sm text-gray-600'>Maruti Suzuki Alto</p>
               </div>
             </div>
