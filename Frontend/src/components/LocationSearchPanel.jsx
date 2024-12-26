@@ -1,31 +1,35 @@
 import React from 'react'
 
-const LocationSearchPanel = (props) => {
+const LocationSearchPanel = ({ suggestions, setVehiclePanel, setPanelOpen, setPickup, setDestination, activeField }) => {
     
-    // sample array for location
-    const loactions = [
-        "24B Near kapoor's cafe ,Sheriyans Cod School,Bhopal",
-        "242B Near poor's cafe ,Sheriyans Coding Schoolhopal",
-        "232B Near or's cae ,Sheriyans Coding School,Bhopal",
-        "245B Near k's cafe ,Sheriyans Codg School,Bhal"
+  const handleSuggestionClick = (suggestion) => {
+    if (activeField === 'pickup') {
+        setPickup(suggestion)
+    } else if (activeField === 'destination') {
+        setDestination(suggestion)
+    }
+    // setVehiclePanel(true)
+    // setPanelOpen(false)
+}
 
-    ]
   return (
     <div>
-      {/* demo location info */}
-      {
-        loactions.map(function(elem,idx){
-            return <div key={idx} onClick={()=>{
-                props.setVehiclePanel(true)
-                props.setPanelOpen(false)
-            }} className='flex border-2 p-3 border-gray-50 active:border-black rounded-xl items-center my-2 justify-start gap-4'>
-            <h2 className='bg-[#eee] h-8 w-12 rounded-full flex items-center justify-center'><i className="ri-map-pin-fill "></i></h2>
-            <h4 className='font-medium'>{elem}</h4>
-          </div>
-        })
-      }
-
-    </div>
+            {/* Display fetched suggestions */}
+            {
+                suggestions.map((elem, idx) => (
+                    <div key={idx} 
+                    onClick={() => handleSuggestionClick(elem)} 
+                    className='flex gap-4 border-2 p-3 border-gray-50 active:border-black hover:border-black rounded-xl items-center my-2 justify-start shrink-0 mt-5'>
+                        <div className='bg-[#eee] h-8 flex items-center justify-center w-8 rounded-full'>
+                          <i className="ri-map-pin-fill text-lg"></i>
+                        </div>
+                        <div className='flex-1'>
+                        <h4 className='font-medium '>{elem}</h4>
+                        </div>
+                    </div>
+                ))
+            }
+      </div>
   )
 }
 
