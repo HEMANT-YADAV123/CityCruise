@@ -86,5 +86,5 @@ captainSchema.methods.comparePassword =async function(password){
     return await bcrypt.compare(password,this.password,)//password -> input from user , this.password ->stored hashed password.
 }
 
-const captainModel = mongoose.model('caption',captainSchema);
+const captainModel = mongoose.model('captain',captainSchema);
 module.exports = captainModel;
