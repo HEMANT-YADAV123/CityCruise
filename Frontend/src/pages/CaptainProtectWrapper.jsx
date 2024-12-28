@@ -6,7 +6,6 @@ import axios from 'axios'
 const CaptainProtectWrapper = ({children}) => {
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
-
     const { captain,setCaptain } = useContext(CaptainDataContext);
     const [isLoading,setisLoading] = useState(true);
 
@@ -15,8 +14,8 @@ const CaptainProtectWrapper = ({children}) => {
             {
               navigate('/captain-login');
             }
-        },[token])
-        //we dont only need token to verify the captain because when a normal user also login then also token is generated so, we have to validate that token also
+
+            //we dont only need token to verify the captain because when a normal user also login then also token is generated so, we have to validate that token also
         axios.get(`${import.meta.env.VITE_BASE_URL}/captains/profile`,{
             headers: {
                 Authorization: `Bearer ${token}`
@@ -35,6 +34,8 @@ const CaptainProtectWrapper = ({children}) => {
             navigate('/captain-login')
             
         })
+    },[token])
+        
         if(isLoading)
         {
             return(

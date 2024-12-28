@@ -9,7 +9,7 @@ dotenv.config();
 
 module.exports.authUser = async (req,res,next) => {//we are checking if the user is login or not
     //token is present in two places 1.>cookie  2.>header authorization(we have to split the header.authorization to get header)
-    const token = req.cookies.token || (req.headers.authorization && req.headers.authorization?.split(' ')[1]);
+    const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
     if(!token)
     {
         return res.status(401).json({ message: "Unauthorized user" });
@@ -40,7 +40,7 @@ module.exports.authUser = async (req,res,next) => {//we are checking if the user
 
 module.exports.authCaptain = async (req,res,next) => {//we are checking if the user is login or not
     //token is present in two places 1.>cookie  2.>header authorization(we have to split the header.authorization to get header)
-    const token = req.cookies.token || (req.headers.authorization && req.headers.authorization?.split(' ')[1]);
+    const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
     if(!token)
     {
         return res.status(401).json({ message: "Unauthorized" });
