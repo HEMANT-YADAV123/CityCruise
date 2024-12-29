@@ -14,6 +14,7 @@ import {SocketContext} from '../context/SocketContext'
 import { useEffect } from 'react'
 import { UserDataContext } from '../context/UserContext'
 import { useNavigate } from 'react-router-dom'
+import LiveTracking from '../components/LiveTracking'
 
 const Home = () => {
   const [pickup,setPickup] = useState('');
@@ -53,8 +54,9 @@ const Home = () => {
   })
 
   socket.on('ride-started', ride =>{
+    console.log("ride");
     setWaitingForDriver(false);
-    navigate('/riding');
+    navigate('/riding', { state: { ride } });
   })
 
   const submitHandler = (e)=>{
@@ -217,7 +219,7 @@ async function createRide(){
 
       {/* temperorary image */}
       <div className='h-screen w-screen'>
-        <img className='h-full w-full object-cover' src={map} alt="" />
+        <LiveTracking/>
       </div>
 
       <div className='flex flex-col justify-end h-screen absolute top-0 w-full'>
