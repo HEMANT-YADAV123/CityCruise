@@ -13,6 +13,7 @@ import WaitingForDriver from '../components/WaitingForDriver'
 import {SocketContext} from '../context/SocketContext'
 import { useEffect } from 'react'
 import { UserDataContext } from '../context/UserContext'
+import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
   const [pickup,setPickup] = useState('');
@@ -35,6 +36,8 @@ const Home = () => {
   const [ vehicleType, setVehicleType ] = useState(null);
   const [ ride, setRide ] = useState(null);
 
+  const navigate = useNavigate();
+
 
   const { socket } = useContext(SocketContext);
   const { user } = useContext(UserDataContext);
@@ -47,6 +50,11 @@ const Home = () => {
     setVehicleFound(false);
     setWaitingForDriver(true);
     setRide(ride)
+  })
+
+  socket.on('ride-started', ride =>{
+    setWaitingForDriver(false);
+    navigate('/riding');
   })
 
   const submitHandler = (e)=>{
@@ -250,7 +258,7 @@ async function createRide(){
             </form>
             <button
             onClick={findTrip}
-            className='bg-black text-white px-4 py-2 rounded-lg mt-4 w-full'>
+            className='bg-black text-white px-4 py-2 rounded-lg mt-5 w-full'>
                   <h4 className='text-lg font-medium'>Find Trip</h4>
             </button>
         </div>
