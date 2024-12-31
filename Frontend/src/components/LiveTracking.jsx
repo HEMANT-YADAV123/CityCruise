@@ -7,8 +7,8 @@ const containerStyle = {
 };
 
 const center = {
-    lat: -3.745,
-    lng: -38.523
+    lat: 0,
+    lng: 0
 };
 
 const LiveTracking = () => {
