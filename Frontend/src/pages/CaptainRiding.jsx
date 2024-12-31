@@ -5,6 +5,7 @@ import { Link ,useLocation } from 'react-router-dom'
 import FinishRide from '../components/FinishRide'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
+import LiveTracking from '../components/LiveTracking'
 
 const CaptainRiding = () => {
     const [finishRidePanel,setFinishRidePanel] = useState(false);
@@ -35,7 +36,7 @@ const CaptainRiding = () => {
           </Link>
         </div>
         <div className='h-4/5'>
-            <img className='h-full w-full object-cover' src={map} alt="" />
+            <LiveTracking/>
         </div>
         <div onClick={()=>{setFinishRidePanel(true)}} className='h-1/5 p-6 flex items-center justify-between relative bg-yellow-400'>
             <h5 onClick={()=>{}} className='p-1 text-center w-[95%] absolute top-0'><i className="text-3xl text-gray-600 ri-arrow-up-wide-line"></i></h5>

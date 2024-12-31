@@ -34,7 +34,25 @@ const LiveTracking = () => {
         return () => navigator.geolocation.clearWatch(watchId);
     }, []);
 
-    
+    useEffect(() => {
+        const updatePosition = () => {
+            navigator.geolocation.getCurrentPosition((position) => {
+                const { latitude, longitude } = position.coords;
+
+                console.log('Position updated:', latitude, longitude);
+                setCurrentPosition({
+                    lat: latitude,
+                    lng: longitude
+                });
+            });
+        };
+
+        updatePosition(); // Initial position update
+
+        const intervalId = setInterval(updatePosition, 1000); // Update every 10 seconds
+
+    }, []);
+
     return (
         <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
             <GoogleMap
