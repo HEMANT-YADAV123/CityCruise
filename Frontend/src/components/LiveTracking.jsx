@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { LoadScript, GoogleMap, Marker } from '@react-google-maps/api'
+import React, { useState, useEffect, useRef } from 'react';
+import { LoadScript, GoogleMap } from '@react-google-maps/api';
 
 const containerStyle = {
     width: '100%',
@@ -12,46 +12,43 @@ const center = {
 };
 
 const LiveTracking = () => {
-    const [ currentPosition, setCurrentPosition ] = useState(center);
+    const [currentPosition, setCurrentPosition] = useState(center);
+    const mapRef = useRef(null);
+    const markerRef = useRef(null);
 
+    // Update Position using Geolocation
     useEffect(() => {
-        navigator.geolocation.getCurrentPosition((position) => {
+        const updatePosition = (position) => {
             const { latitude, longitude } = position.coords;
             setCurrentPosition({
                 lat: latitude,
                 lng: longitude
             });
-        });
+        };
 
-        const watchId = navigator.geolocation.watchPosition((position) => {
-            const { latitude, longitude } = position.coords;
-            setCurrentPosition({
-                lat: latitude,
-                lng: longitude
-            });
-        });
+        // Initial Position
+        navigator.geolocation.getCurrentPosition(updatePosition);
+
+        // Watch Position
+        const watchId = navigator.geolocation.watchPosition(updatePosition);
 
         return () => navigator.geolocation.clearWatch(watchId);
     }, []);
 
+    // Initialize AdvancedMarkerElement
     useEffect(() => {
-        const updatePosition = () => {
-            navigator.geolocation.getCurrentPosition((position) => {
-                const { latitude, longitude } = position.coords;
-
-                console.log('Position updated:', latitude, longitude);
-                setCurrentPosition({
-                    lat: latitude,
-                    lng: longitude
+        if (mapRef.current && google?.maps?.marker?.AdvancedMarkerElement) {
+            if (!markerRef.current) {
+                markerRef.current = new google.maps.marker.AdvancedMarkerElement({
+                    map: mapRef.current,
+                    position: currentPosition,
+                    title: 'Current Location'
                 });
-            });
-        };
-
-        updatePosition(); // Initial position update
-
-        const intervalId = setInterval(updatePosition, 1000); // Update every 10 seconds
-
-    }, []);
+            } else {
+                markerRef.current.position = currentPosition;
+            }
+        }
+    }, [currentPosition]);
 
     return (
         <LoadScript googleMapsApiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}>
@@ -59,11 +56,10 @@ const LiveTracking = () => {
                 mapContainerStyle={containerStyle}
                 center={currentPosition}
                 zoom={15}
-            >
-                <Marker position={currentPosition} />
-            </GoogleMap>
+                onLoad={(map) => (mapRef.current = map)}
+            />
         </LoadScript>
-    )
-}
+    );
+};
 
-export default LiveTracking
+export default LiveTracking;

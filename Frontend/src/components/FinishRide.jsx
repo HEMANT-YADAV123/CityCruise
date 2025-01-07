@@ -1,5 +1,5 @@
 import React from 'react'
-import Customer from '../assets/Customer.png'
+import Customer from '../assets/customer (2).png'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'

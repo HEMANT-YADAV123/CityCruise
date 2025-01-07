@@ -1,6 +1,7 @@
-import React, { useRef, useState } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
+import { useRef, useState } from 'react'
 import axios from 'axios'
-import map from '../assets/map.png.png'
 import logo from '../assets/CityCruise__3_-removebg-preview.png'
 import { Link } from 'react-router-dom'
 import {useGSAP} from '@gsap/react'//gsap is an animation library and useGSAP ias a hook used for gsap
@@ -11,6 +12,7 @@ import ConfirmRidePopUp from '../components/ConfirmRidePopUp'
 import { useEffect,useContext } from 'react'
 import { SocketContext } from '../context/SocketContext'
 import { CaptainDataContext } from '../context/CapatainContext'
+import LiveTracking from '../components/LiveTracking'
 
 
 const CaptainHome = () => {
@@ -114,7 +116,7 @@ useGSAP(function(){
           </Link>
         </div>
       <div className='h-3/5'>
-        <img className='h-full w-full object-cover' src={map} alt="" />
+        <LiveTracking/>
       </div>
       <div className='h-2/5 p-6'>
           <CaptainDetails/>

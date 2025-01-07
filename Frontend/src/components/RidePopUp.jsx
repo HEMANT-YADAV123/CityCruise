@@ -1,5 +1,5 @@
 import React from 'react'
-import Customer from '../assets/Customer.png'
+import Customer from '../assets/customer (2).png'
 
 const RidePopUp = (props) => {
   return (

@@ -1,6 +1,6 @@
 import React from 'react'
 import { useContext } from 'react'
-import Driver from '../assets/Driver.png'
+import Driver from '../assets/driver (2).png'
 import {CaptainDataContext} from '../context/CapatainContext'
 
 const CaptainDetails = () => {
