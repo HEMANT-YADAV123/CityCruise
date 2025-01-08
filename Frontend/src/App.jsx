@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useContext } from 'react'
 import { Route,Routes } from 'react-router-dom'
 import Start from './pages/Start';

@@ -1,4 +1,6 @@
-import React, { useState,useContext } from 'react'
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable no-unused-vars */
+import { useState,useContext } from 'react'
 import loginlogo from '../assets/CityCruise__3_-removebg-preview.png'
 import { Link } from 'react-router-dom'
 import { UserDataContext } from '../context/UserContext'
@@ -8,7 +10,7 @@ import axios from 'axios'
 const UserLogin = () => {
 const [email,setEmail] = useState('');  
 const [password,setPassword] = useState(''); 
-const [userData,setUserData] = useState({}); 
+ 
 
 const {user , setUser}  = useContext(UserDataContext)
 const navigate = useNavigate();
