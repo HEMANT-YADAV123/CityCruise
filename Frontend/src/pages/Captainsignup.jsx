@@ -1,8 +1,12 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable no-unused-vars */
 import React, { useState,useContext } from 'react'
 import loginlogo from '../assets/CityCruise__3_-removebg-preview.png'
 import { Link } from 'react-router-dom'
 import {CaptainDataContext} from '../context/CapatainContext'
 import { useNavigate } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios'
 
 const Captainsignup = () => {
@@ -36,14 +40,50 @@ const Captainsignup = () => {
                 vehicleType: vehicleType
               }
         }
+        try{
+         
+        if(firstname.length < 3)
+        {
+            toast.error('firstname must be atleast 3 character long')
+        }    
+        if(lastname.length < 3)
+        {
+            toast.error('lastname must be atleast 3 character long')
+        }
+        if(email.length < 5)
+        {
+            toast.error('email must be atleast 5 character long')
+        }
+        if(vehicleColor.length < 3)
+        {
+            toast.error('vehicle color must be atleast 3 character long')
+        }
+        if(parseInt(vehicleCapacity) < 1 || isNaN(vehicleCapacity))//isNaN if user enter any in valid input
+        {
+            toast.error('vehicle capacity must be atleast 1')
+        }
+        if(vehiclePlate.length < 3)
+        {
+            toast.error('vehicle plate nu. must be atleast 3 character long')
+        }
         const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`,CaptainData)
         if(response.status === 201)
         {
             const data = response.data;
             setCaptain(data.captain); 
             localStorage.setItem('token',data.token);
+            toast.success('captain registered Sucessfully!');
             navigate('/captain-home')
         }
+    }
+    catch(err)
+    {
+        if (err.response && err.response.data && err.response.data.message) {
+            toast.error(err.response.data.message); // Show backend error message
+        } else {
+            toast.error('Something went wrong! Please try again.'); // General error
+        }
+    }
     
         setEmail('')
         setPassword('')
@@ -162,6 +202,7 @@ const Captainsignup = () => {
         Policy</span> and <span className='underline'>Terms of Service apply</span>.</p>
         </div>
     </div>
+    <ToastContainer/>
     </div>
   )
 }

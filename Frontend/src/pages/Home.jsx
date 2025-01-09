@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
 import React, { useContext, useRef, useState } from 'react'
 import logo from '../assets/CityCruise__3_-removebg-preview.png'
-import map from '../assets/map.png.png'
 import {useGSAP} from '@gsap/react'//gsap is an animation library and useGSAP ias a hook used for gsap
 import gsap from 'gsap'
 import axios from 'axios'

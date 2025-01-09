@@ -1,8 +1,11 @@
+/* eslint-disable no-unused-vars */
 import React, { useState ,useContext} from 'react'
 import loginlogo from '../assets/CityCruise__3_-removebg-preview.png'
 import { Link ,useNavigate} from 'react-router-dom'
 import axios from 'axios'
 import {UserDataContext} from '../context/UserContext'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const UserSignup = () => {
     const [email,setEmail] = useState('');  
@@ -23,6 +26,26 @@ const submitHandler = async(e)=>{
             email: email,
             password: password,
         }
+    try{    
+        if(firstname.length < 3)
+        {
+            toast.error('firstname must be atleast 3 character long')
+            return;
+        }
+        if(lastname.length < 3)
+        {
+            toast.error('lastname must be atleast 3 character long')
+            return 
+        }
+        if(email.length < 5)
+        {
+            toast.error('email must be atleast 5 character long')
+            return 
+        }
+        if(!email.includes('@') || !email.includes('.')) {
+            toast.error('Please enter a valid email address');
+            return;
+        }
     const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`,newUser);
 
     if(response.status === 201)
@@ -30,8 +53,17 @@ const submitHandler = async(e)=>{
         const data = response.data;
         setUser(data.user);
         localStorage.setItem('token',data.token);
+        toast.success('user registered successfully');
         navigate('/home')
     }
+}
+catch(err){
+    if (err.response && err.response.data && err.response.data.message) {
+        toast.error(err.response.data.message); // Show backend error message
+    } else {
+        toast.error('Something went wrong! Please try again.'); // General error
+    }
+}
     setEmail('')
     setPassword('')
     setFirstname('')
@@ -91,6 +123,7 @@ const submitHandler = async(e)=>{
             <p className='text-xs leading-tight'>By proceeding, you consent to get calls, WhatsApp or SMS messages, including by automated means, from CityCruise and it affilates to the number provided</p>
         </div>
     </div>
+    <ToastContainer/>
     </div>
   )
 }

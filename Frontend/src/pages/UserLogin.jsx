@@ -6,6 +6,9 @@ import { Link } from 'react-router-dom'
 import { UserDataContext } from '../context/UserContext'
 import {useNavigate} from 'react-router-dom'
 import axios from 'axios'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const UserLogin = () => {
 const [email,setEmail] = useState('');  
@@ -23,16 +26,25 @@ const submitHandler = async(e)=>{
         email: email,
         password: password
     }
+    try {
+            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`,userData)
 
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`,userData)
-
-    if(response.status === 200)
-    {
-        const data = response.data;
-        setUser(data.user);//set the user with the fields we have provided.
-        //and also store the token.
-        localStorage.setItem('token',data.token);//take the token from data.token and set it into 'token' 
-        navigate('/home')
+            if(response.status === 200)
+            {
+                const data = response.data;
+                setUser(data.user);//set the user with the fields we have provided.
+                //and also store the token.
+                localStorage.setItem('token',data.token);//take the token from data.token and set it into 'token' 
+                toast.success('Login successfull!'); // Show success toast
+                navigate('/home')
+            }
+    }
+    catch(err){
+        if (err.response && err.response.data && err.response.data.message) {
+            toast.error(err.response.data.message); // Show backend error message
+        } else {
+            toast.error('Something went wrong! Please try again.'); // General error
+        }
     }
     setEmail('')
     setPassword('')    
@@ -74,6 +86,17 @@ const submitHandler = async(e)=>{
                 Sign in as Captain
             </Link>
         </div>
+        <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        />
     </div>
   )
 }

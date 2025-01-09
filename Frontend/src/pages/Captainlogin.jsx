@@ -6,6 +6,8 @@ import loginlogo from '../assets/CityCruise__3_-removebg-preview.png'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { CaptainDataContext } from '../context/CapatainContext'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios'
 
 const Captainlogin = () => {
@@ -21,6 +23,7 @@ const Captainlogin = () => {
             email:email,
             password:password
         }
+        try{
 
         const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/login`,captain)
 
@@ -31,6 +34,15 @@ const Captainlogin = () => {
             localStorage.setItem('token', data.token)
             navigate('/captain-home')
         }
+    }
+    catch(err)
+    {
+        if (err.response && err.response.data && err.response.data.message) {
+                    toast.error(err.response.data.message); // Show backend error message
+                } else {
+                    toast.error('Something went wrong! Please try again.'); // General error
+                }
+            }    
         setEmail('')
         setPassword('')    
     }
@@ -71,6 +83,7 @@ const Captainlogin = () => {
                 Sign in as User
             </Link>
         </div>
+        <ToastContainer/>
     </div>
   )
 }
