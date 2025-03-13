@@ -1,4 +1,4 @@
-import React from 'react'
+/* eslint-disable react/prop-types */
 import car from '../assets/car.png'
 
 const WaitingForDriver = (props) => {

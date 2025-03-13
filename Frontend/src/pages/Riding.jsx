@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react'
 import map from '../assets/map.png.png'
 import car from '../assets/car.png'

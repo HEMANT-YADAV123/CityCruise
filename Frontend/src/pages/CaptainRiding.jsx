@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useRef, useState } from 'react'
 import map from '../assets/map.png.png'
 import logo from '../assets/CityCruise__3_-removebg-preview.png'

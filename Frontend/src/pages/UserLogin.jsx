@@ -36,7 +36,9 @@ const submitHandler = async(e)=>{
                 //and also store the token.
                 localStorage.setItem('token',data.token);//take the token from data.token and set it into 'token' 
                 toast.success('Login successfull!'); // Show success toast
-                navigate('/home')
+                setTimeout(() => {
+                    navigate('/home');
+                }, 1000);
             }
     }
     catch(err){
@@ -50,7 +52,19 @@ const submitHandler = async(e)=>{
     setPassword('')    
   }
   return (
+
     <div className='p-7 h-screen flex flex-col justify-between'>
+        <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        />
         <div>
             <img className='w-32 h-10 mb-8 -ml-2'src={loginlogo} alt="img" />
             <form onSubmit={(e)=>{submitHandler(e)}}>
@@ -86,17 +100,7 @@ const submitHandler = async(e)=>{
                 Sign in as Captain
             </Link>
         </div>
-        <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        />
+        
     </div>
   )
 }

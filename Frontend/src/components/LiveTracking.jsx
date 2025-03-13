@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-undef */
 import React, { useState, useEffect, useRef } from 'react';
 import { LoadScript, GoogleMap } from '@react-google-maps/api';
 

@@ -1,4 +1,3 @@
-import React from 'react'
 import logo from '../assets/CityCruise__2_-removebg-preview.png'
 import { Link } from 'react-router-dom'
 const Start = () => {

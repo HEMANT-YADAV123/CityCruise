@@ -8,13 +8,13 @@ import SocketProvider from './context/SocketContext.jsx';
 
 createRoot(document.getElementById('root')).render(
   
-    <CaptainContext>
-        <UserContext>
+<CaptainContext>
+    <UserContext>
         <SocketProvider>
             <BrowserRouter>
                 <App />
             </BrowserRouter>
-            </SocketProvider>
-        </UserContext>
-    </CaptainContext>
+        </SocketProvider>
+    </UserContext>
+</CaptainContext>
 )

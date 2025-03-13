@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useContext, useRef, useState } from 'react'
 import logo from '../assets/CityCruise__3_-removebg-preview.png'
-import {useGSAP} from '@gsap/react'//gsap is an animation library and useGSAP ias a hook used for gsap
+import {useGSAP} from '@gsap/react'//gsap is an animation library and useGSAP is a hook used for gsap
 import gsap from 'gsap'
 import axios from 'axios'
 import 'remixicon/fonts/remixicon.css'
@@ -215,7 +215,7 @@ async function createRide(){
 
   return (
     
-    <div className='h-screen relative overflow-hidden'>
+    <div className='h-auto relative'>
       <img className='w-32 h-10 absolute left-3 top-4' src={logo} alt="" />
 
       {/* temperorary image */}

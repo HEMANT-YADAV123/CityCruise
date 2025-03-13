@@ -1,3 +1,6 @@
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import { createContext, useState, useContext } from 'react';
 
 export const CaptainDataContext = createContext();
