@@ -11,8 +11,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios'
 
 const Captainlogin = () => {
-    const [email,setEmail] = useState('');  
-    const [password,setPassword] = useState(''); 
+    const [email,setEmail] = useState('harsh@gmail.com');  
+    const [password,setPassword] = useState('Harsh@1'); 
 
     const {captain,setCaptain} = useContext(CaptainDataContext);
     const navigate = useNavigate();

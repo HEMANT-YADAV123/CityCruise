@@ -11,8 +11,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 const UserLogin = () => {
-const [email,setEmail] = useState('');  
-const [password,setPassword] = useState(''); 
+const [email,setEmail] = useState('hemant@gmail.com');  
+const [password,setPassword] = useState('Hemant@1'); 
  
 
 const {user , setUser}  = useContext(UserDataContext)
