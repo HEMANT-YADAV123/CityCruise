@@ -27,4 +27,17 @@ router.get('/profile',authMiddleware.authCaptain,captainController.getCaptainPro
 
 router.post('/logout', authMiddleware.authCaptain, captainController.logoutController);
 
+// Forgot Password Route
+router.post('/forgot-password', [
+    body('email').isEmail().withMessage("Invalid Email")
+], captainController.forgotPasswordController);
+
+// Verify Reset Token Route
+router.get('/verify-reset-token/:token', captainController.verifyResetTokenController);
+
+// Reset Password Route
+router.post('/reset-password', [
+    body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long')
+], captainController.resetPasswordController);
+
 module.exports = router;

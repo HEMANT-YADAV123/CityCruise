@@ -65,7 +65,17 @@ const captainSchema = new mongoose.Schema({
         lng:{
             type: Number,
         }
+    },
+    resetPasswordToken: {
+        type: String,
+        select: false
+    },
+    resetPasswordExpires: {
+        type: Date,
+        select: false
     }
+},{
+    timestamps: true // This will add createdAt and updatedAt automatically
 }) 
 
 captainSchema.methods.generateAuthToken = function(){
@@ -84,6 +94,11 @@ captainSchema.statics.hashPassword = async function (password) {
 
 captainSchema.methods.comparePassword =async function(password){
     return await bcrypt.compare(password,this.password,)//password -> input from user , this.password ->stored hashed password.
+}
+
+// Generate reset token
+captainSchema.statics.generateResetToken = function() {
+    return crypto.randomBytes(32).toString('hex');
 }
 
 const captainModel = mongoose.model('captain',captainSchema);
