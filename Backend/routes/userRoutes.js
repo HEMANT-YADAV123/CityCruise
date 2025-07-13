@@ -38,5 +38,5 @@ router.post('/reset-password',[
 router.get('/profile',authMiddleware.authUser,userController.getUserProfile);//get is used to retrive data and post is used to submit data. 
 
 //logout route.
-router.get('/logout',authMiddleware.authUser,userController.logoutController);
+router.post('/logout',authMiddleware.authUser,userController.logoutController);
 module.exports = router;
