@@ -15,7 +15,7 @@ const CaptainForgotPassword = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/reset-password`, {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/forgot-password`, {
         email: email
       });
 
@@ -145,7 +145,7 @@ const CaptainForgotPassword = () => {
 
             {/* Back to login */}
             <div className='mt-8 text-center'>
-              <Link to='/login' className='text-black hover:text-gray-700 font-medium flex items-center justify-center'>
+              <Link to='/captain-login' className='text-black hover:text-gray-700 font-medium flex items-center justify-center'>
                 <svg className='w-4 h-4 mr-2' fill='currentColor' viewBox='0 0 20 20'>
                   <path fillRule='evenodd' d='M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z' clipRule='evenodd' />
                 </svg>
