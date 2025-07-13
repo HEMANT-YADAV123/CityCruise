@@ -6,9 +6,9 @@ const RidePopUp = (props) => {
     <div>
       <h5 onClick={()=>{props.setRidePopUpPanel(false)}} className='p-1 text-center w-[93%] absolute top-0'><i className="text-3xl text-gray-200 ri-arrow-down-wide-line"></i></h5>
             <h3 className='text-2xl font-semibold mb-5'>New Ride Available!</h3>
-            <div className='flex items-center justify-between p-3 bg-yellow-400 rounded-lg mt-4'>
+            <div className='flex items-center justify-between p-3 bg-amber-500 rounded-lg mt-4'>
                 <div className='flex items-center gap-3 '>
-                    <img className='h-16 w-16 rounded-full object-cover'src={Customer} alt="" />
+                    <img className='h-16 w-16 rounded-full object-contain'src={Customer} alt="" />
                     <h2 className='text-lg font-medium'>{props.ride?.user.fullname.firstname + " " + props.ride?.user.fullname.lastname}</h2>
                 </div>
                 <h5 className='text-lg font-semibold'>2.2 KM</h5>

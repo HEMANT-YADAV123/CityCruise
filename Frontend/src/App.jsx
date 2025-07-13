@@ -15,6 +15,8 @@ import CaptainProtectWrapper from './pages/CaptainProtectWrapper';
 import CaptainLogout from './pages/CaptainLogout';
 import Riding from './pages/Riding';
 import CaptainRiding from './pages/CaptainRiding';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 
 const App = () => {
 
@@ -29,6 +31,8 @@ const App = () => {
         <Route path='/signup' element= {<UserSignup/>}/>
         <Route path='/captain-login' element= {<Captainlogin/>}/>
         <Route path='/captain-signup' element= {<Captainsignup/>}/>
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path='/home' 
           element= {
             <UserProtectWrapper>

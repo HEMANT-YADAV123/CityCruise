@@ -2,6 +2,8 @@ const userModel = require('../models/userModel');
 const userService = require('../services/userServices')
 const {validationResult} = require('express-validator')
 const blacklistTokenModel = require('../models/blacklistTokenModel');
+const crypto = require('crypto');
+const emailService = require('./emailController')
 
 module.exports.registerController = async(req,res,next)=>{
     const errors = validationResult(req); //agr kuch bi error hai request(jo hamne routes me dali hai) me then set it to error variable.
@@ -34,7 +36,6 @@ module.exports.registerController = async(req,res,next)=>{
         token,user});
 }
 
-
 module.exports.loginController = async(req,res,next)=>{
     const errors = validationResult(req);
     if(!errors.isEmpty())
@@ -62,6 +63,116 @@ module.exports.loginController = async(req,res,next)=>{
     res.cookie('token',token);//set the token in cookie also.
 
     return res.status(200).json({token,user});
+}
+
+module.exports.forgotPasswordController = async(req, res, next) => {
+    try {
+        const errors = validationResult(req);
+        if(!errors.isEmpty()) {
+            return res.status(400).json({errors: errors.array()});
+        }
+
+        const { email } = req.body;
+
+        // Check if user exists
+        const user = await userModel.findOne({ email });
+        if(!user) {
+            return res.status(404).json({message: 'User not found with this email'});
+        }
+
+        // Generate reset token
+        const resetToken = user.generatePasswordResetToken();
+        await user.save();
+
+        // Send email
+        await emailService.sendPasswordResetEmail(email, resetToken);
+
+        res.status(200).json({
+            message: 'Password reset email sent successfully'
+        });
+
+    } catch (error) {
+        console.error('Forgot password error:', error);
+        res.status(500).json({
+            message: 'Something went wrong. Please try again later.'
+        });
+    }
+}
+
+module.exports.verifyResetTokenController = async(req, res, next) => {
+    try {
+        const { token } = req.params;
+
+        // Hash the token to compare with stored hashed token
+        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+        // Find user with valid token
+        const user = await userModel.findOne({
+            resetPasswordToken: hashedToken,
+            resetPasswordExpires: { $gt: Date.now() }
+        });
+
+        if(!user) {
+            return res.status(400).json({
+                message: 'Invalid or expired reset token'
+            });
+        }
+
+        res.status(200).json({
+            message: 'Token is valid'
+        });
+
+    } catch (error) {
+        console.error('Token verification error:', error);
+        res.status(500).json({
+            message: 'Something went wrong. Please try again later.'
+        });
+    }
+}
+
+module.exports.resetPasswordController = async(req, res, next) => {
+    try {
+        const errors = validationResult(req);
+        if(!errors.isEmpty()) {
+            return res.status(400).json({errors: errors.array()});
+        }
+
+        const { token, password } = req.body;
+
+        // Hash the token to compare with stored hashed token
+        const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+        // Find user with valid token
+        const user = await userModel.findOne({
+            resetPasswordToken: hashedToken,
+            resetPasswordExpires: { $gt: Date.now() }
+        });
+
+        if(!user) {
+            return res.status(400).json({
+                message: 'Invalid or expired reset token'
+            });
+        }
+
+        // Hash new password
+        const hashedPassword = await userModel.hashPassword(password);
+
+        // Update user password and clear reset token fields
+        user.password = hashedPassword;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+        await user.save();
+
+        res.status(200).json({
+            message: 'Password reset successful'
+        });
+
+    } catch (error) {
+        console.error('Reset password error:', error);
+        res.status(500).json({
+            message: 'Something went wrong. Please try again later.'
+        });
+    }
 }
 
 module.exports.getUserProfile = async(req,res,next)=>{

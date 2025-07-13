@@ -15,24 +15,24 @@ const CaptainDetails = () => {
               </div>
               <div>
                 <h4 className='text-xl font-semibold'>₹295.2</h4>
-                <p className='text-sm text-gray-600'>Earned</p>
+                <p className='text-sm'>Earned</p>
               </div>
           </div>
-          <div className='flex p-3 mt-8 bg-gray-100 rounded-xl justify-center gap-5 items-start'>
+          <div className='flex p-3 mt-8 rounded-xl justify-center gap-5 items-start'>
               <div className='text-center'>
                 <i className="text-3xl mb-2 font-extralight  ri-timer-2-line"></i>
                 <h5 className='text-lg font-medium'>10.2</h5>
-                <p className='text-sm text-gray-600'>Hours Online</p>
+                <p className='text-sm '>Hours Online</p>
               </div>
               <div className='text-center'>
                 <i className="text-3xl mb-2 font-extralight  ri-speed-up-line"></i>
                 <h5 className='text-lg font-medium'>10.2</h5>
-                <p className='text-sm text-gray-600'>Hours Online</p>
+                <p className='text-sm '>Hours Online</p>
               </div>
               <div className='text-center'>
                 <i className="text-3xl mb-2 font-extralight  ri-booklet-line"></i>
                 <h5 className='text-lg font-medium'>10.2</h5>
-                <p className='text-sm text-gray-600'>Hours Online</p>
+                <p className='text-sm '>Hours Online</p>
               </div>
           </div>
     </div>

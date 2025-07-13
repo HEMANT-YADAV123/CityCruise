@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
     fullname:{
@@ -29,7 +30,18 @@ const userSchema = new mongoose.Schema({
     socketId: {//this socket id will be used for live tracking.
         type: String,
     },
-})
+    // Password reset fields
+    resetPasswordToken: {
+        type: String,
+        select: false
+    },
+    resetPasswordExpires: {
+        type: Date,
+        select: false
+    }
+}, {
+    timestamps: true // This will add createdAt and updatedAt automatically
+});
 //generating token
 userSchema.methods.generateAuthToken = function(){
     const token = jwt.sign(
@@ -38,6 +50,20 @@ userSchema.methods.generateAuthToken = function(){
         {expiresIn: '24h'}//added expire time.
     );
     return token;
+}
+
+// Generate password reset token
+userSchema.methods.generatePasswordResetToken = function() {
+    // Generate random token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    
+    // Hash token and set to resetPasswordToken field
+    this.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+    
+    // Set expire time (10 minutes)
+    this.resetPasswordExpires = Date.now() + 10 * 60 * 1000;
+    
+    return resetToken;
 }
 
 userSchema.statics.hashPassword = async function (password) {

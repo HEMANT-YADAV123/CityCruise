@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import { useRef, useState } from "react";
 import axios from "axios";
-import logo from "../assets/CityCruise__3_-removebg-preview.png";
+import logo from "../assets/CityCruise (1).png";
 import { Link } from "react-router-dom";
 import { useGSAP } from "@gsap/react"; //gsap is an animation library and useGSAP ias a hook used for gsap
 import gsap from "gsap";
@@ -25,26 +25,26 @@ const CaptainHome = () => {
   const { captain } = useContext(CaptainDataContext);
 
   const handleLogout = async () => {
-      try {
-        const response = await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/captains/logout`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-
-        if (response.status === 200) {
-          localStorage.removeItem("token");
-          // Redirect to login or home page
-          window.location.href = "/captain-login"; // or use navigate if you have it
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/captains/logout`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
-      } catch (error) {
-        console.error("Logout failed:", error);
+      );
+
+      if (response.status === 200) {
+        localStorage.removeItem("token");
+        // Redirect to login or home page
+        window.location.href = "/captain-login"; // or use navigate if you have it
       }
-    };
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   useEffect(() => {
     socket.emit("join", {
@@ -127,11 +127,15 @@ const CaptainHome = () => {
   return (
     <div className="h-screen flex flex-col">
       {/* Header Section - Fixed minimal height */}
-      <header className="h-14 bg-transparent shadow-md flex items-center justify-between px-6 flex-shrink-0">
-        <img className="w-32 h-10" src={logo} alt="" />
+      <header className="h-12 bg-black shadow-md flex items-center justify-between px-6 flex-shrink-0">
+        <Link to='/captain-home'>
+          <img className="w-32 h-10 bg-white" src={logo} alt="" />
+        </Link>
+
         <button
           onClick={handleLogout}
-          className="h-10 w-10 bg-gray-100 flex items-center justify-center rounded-full hover:bg-gray-200 transition-colors"
+          className="h-10 w-10 bg-black text-white flex items-center justify-center rounded-full hover:bg-white 
+          hover:text-black transition-colors"
         >
           <i className="text-lg font-bold ri-logout-box-r-line"></i>
         </button>
@@ -143,18 +147,17 @@ const CaptainHome = () => {
       </div>
 
       {/* Captain Details Section - Fixed height at bottom */}
-      <div className="h-48 bg-white border-t p-6 flex-shrink-0">
+      <div className="h-auto bg-black text-white border-t p-6 flex-shrink-0">
         <CaptainDetails />
       </div>
 
       {/* Ride popup panel */}
       <div
         ref={ridePopUpPanelRef}
-        className="fixed w-full z-10 translate-y-full bottom-0 bg-white px-3 py-10 pt-12"
+        className="fixed w-full z-10 translate-y-full bottom-0 bg-black text-white px-3 py-10 pt-12"
       >
         <RidePopUp
           ride={ride}
-          //  passenger={passenger}
           setRidePopUpPanel={setRidePopUpPanel}
           setConfirmRidePopUpPanel={setConfirmRidePopUpPanel}
           confirmRide={confirmRide}
@@ -164,7 +167,7 @@ const CaptainHome = () => {
       {/*Confirm Ride PopUp  */}
       <div
         ref={confirmRidePopUpPanelRef}
-        className="fixed w-full h-screen z-10 translate-y-full bottom-0 bg-white px-3 py-10 pt-12"
+        className="fixed w-full h-screen z-10 translate-y-full bottom-0 bg-black text-white px-3 py-10 pt-12"
       >
         <ConfirmRidePopUp
           ride={ride}

@@ -19,6 +19,20 @@ router.post('/login',[
     body('password').isLength({min : 6}).withMessage('Password must be 6 character long'),
 ],userController.loginController)
 
+//forgot password route
+router.post('/forgot-password',[
+    body('email').isEmail().withMessage("Invalid Email"),
+],userController.forgotPasswordController);
+
+//verify reset token route
+router.get('/verify-reset-token/:token', userController.verifyResetTokenController);
+
+//reset password route
+router.post('/reset-password',[
+    body('password').isLength({min : 6}).withMessage('Password must be 6 character long'),
+    body('token').notEmpty().withMessage('Token is required'),
+],userController.resetPasswordController);
+
 //profile route
 
 router.get('/profile',authMiddleware.authUser,userController.getUserProfile);//get is used to retrive data and post is used to submit data. 

@@ -31,9 +31,9 @@ const ConfirmRidePopUp = (props) => {
     <div>
           <h5 onClick={()=>{props.setConfirmRidePopUpPanel(false)}} className='p-1 text-center w-[93%] absolute top-0'><i className="text-3xl text-gray-200 ri-arrow-down-wide-line"></i></h5>
                 <h3 className='text-2xl font-semibold mb-5'>Confirm this ride to Start!</h3>
-                <div className='flex items-center justify-between p-3 bg-yellow-400 rounded-lg mt-4'>
+                <div className='flex items-center justify-between p-3 bg-amber-500 rounded-lg mt-4'>
                     <div className='flex items-center gap-3 '>
-                        <img className='h-16 w-16 rounded-full object-cover'src={Customer} alt="" />
+                        <img className='h-16 w-16 rounded-full object-contain'src={Customer} alt="" />
                         <h2 className='text-lg font-medium capitalize'>{props.ride?.user.fullname.firstname + " " + props.ride?.user.fullname.lastname}</h2>
                     </div>
                     <h5 className='text-lg font-semibold'>2.2 KM</h5>
@@ -68,7 +68,7 @@ const ConfirmRidePopUp = (props) => {
                         <input 
                         value={otp}
                         onChange={(e)=>{setOtp(e.target.value)}}
-                        className='bg-[#eee] px-6 py-4 font-mono text-lg rounded-lg w-full mt-3'
+                        className='bg-[#eee] px-6 py-4 font-mono text-black text-lg rounded-lg w-full mt-3'
                         type="text" 
                         placeholder='Enter OTP'/>    
                         <button  className='w-full flex text-lg justify-center mt-5 bg-green-600 text-white font-semibold p-3 rounded-lg'>
