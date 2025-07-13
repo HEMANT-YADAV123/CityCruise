@@ -10,7 +10,7 @@ const CaptainDetails = () => {
     <div>
         <div className='flex items-center justify-between'>
               <div className='flex items-center justify-start gap-3'>
-                <img className='h-16 w-16 rounded-full object-cover' src={Driver} alt="" />
+                <img className='h-16 w-16 rounded-full object-contain' src={Driver} alt="" />
                 <h4 className='text-lg font-medium capitalize'>{captain.fullname.firstname + " " + captain.fullname.lastname}</h4>
               </div>
               <div>

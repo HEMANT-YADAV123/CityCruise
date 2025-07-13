@@ -1,8 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
 import React, { useContext, useRef, useState } from 'react'
 import logo from '../assets/CityCruise__3_-removebg-preview.png'
-import {useGSAP} from '@gsap/react'//gsap is an animation library and useGSAP is a hook used for gsap
+import {useGSAP} from '@gsap/react'
 import gsap from 'gsap'
 import axios from 'axios'
 import 'remixicon/fonts/remixicon.css'
@@ -21,7 +19,7 @@ const Home = () => {
   const [pickup,setPickup] = useState('');
   const [destination,setDestination] = useState('');
   const [panelOpen,setPanelOpen] = useState(false);
-  const panelRef = useRef(null);//ref is used to select any element like here we select the last div using ref={something}.
+  const panelRef = useRef(null);
   const panelCloseRef = useRef(null);
   const [vehiclePanel,setVehiclePanel] = useState(false)
   const vehiclePanelRef = useRef(null);
@@ -39,7 +37,6 @@ const Home = () => {
   const [ ride, setRide ] = useState(null);
 
   const navigate = useNavigate();
-
 
   const { socket } = useContext(SocketContext);
   const { user } = useContext(UserDataContext);
@@ -62,10 +59,8 @@ const Home = () => {
 
   const submitHandler = (e)=>{
     e.preventDefault();
-
   } 
 
-  // pickup suggestions.
   const handlePickupChange = async (e) => {
     setPickup(e.target.value)
     try {
@@ -74,61 +69,54 @@ const Home = () => {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
             }
-
         })
         setPickupSuggestions(response.data)
     } catch(error) {
         // handle error
-        
     }
-}
-
-// destination suggestions
-const handleDestinationChange = async (e) => {
-  setDestination(e.target.value)
-  try {
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`, {
-          params: { input: e.target.value },
-          headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-      })
-      setDestinationSuggestions(response.data)
-  } catch {
-      // handle error
   }
-}
 
-//find trip function
-async function findTrip(){
-  setVehiclePanel(true);
-  setPanelOpen(false);
-  
-  const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`, {
-    params: { pickup, destination },
-    headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-        'Content-Type': 'application/json'
+  const handleDestinationChange = async (e) => {
+    setDestination(e.target.value)
+    try {
+        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`, {
+            params: { input: e.target.value },
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+        setDestinationSuggestions(response.data)
+    } catch {
+        // handle error
     }
-  })
-  setFare(response.data)
-} 
+  }
 
-async function createRide(){
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`,{
-      pickup,
-      destination,
-      vehicleType
-    },{
+  async function findTrip(){
+    setVehiclePanel(true);
+    setPanelOpen(false);
+    
+    const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`, {
+      params: { pickup, destination },
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
       }
     })
+    setFare(response.data)
+  } 
 
-    console.log(response.data);
-    
-}
-
+  async function createRide(){
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`,{
+        pickup,
+        destination,
+        vehicleType
+      },{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      console.log(response.data);
+  }
 
   useGSAP(function(){
     if(panelOpen)
@@ -145,7 +133,6 @@ async function createRide(){
     {
       gsap.to(panelRef.current,{
         height: '0%',
-        // opacity: 0
       })
       gsap.to(panelCloseRef.current,{
         opacity: 0
@@ -214,17 +201,18 @@ async function createRide(){
   },[waitingForDriver])
 
   return (
-    
     <div className='h-auto relative'>
-      <img className='w-32 h-10 absolute left-3 top-4' src={logo} alt="" />
+      <img className='w-32 h-10 absolute left-3 top-4 z-10' src={logo} alt="" />
 
-      {/* temperorary image */}
+      {/* Map container */}
       <div className='h-screen w-screen'>
         <LiveTracking/>
       </div>
 
-      <div className='flex flex-col justify-end h-screen absolute top-0 w-full'>
-        <div className='h-[30%] p-6 bg-white relative'>
+      {/* Overlay container - KEY CHANGE: Added pointer-events-none */}
+      <div className='flex flex-col justify-end h-screen absolute top-0 w-full pointer-events-none'>
+        {/* Form container - KEY CHANGE: Added pointer-events-auto */}
+        <div className='h-[30%] p-6 bg-white relative pointer-events-auto'>
           <h5 
           ref={panelCloseRef} 
           onClick={()=>{setPanelOpen(false)}} 
@@ -265,7 +253,8 @@ async function createRide(){
                   <h4 className='text-lg font-medium'>Find Trip</h4>
             </button>
         </div>
-        <div ref={panelRef} className='bg-white h-0'>
+        {/* Panel container - KEY CHANGE: Added pointer-events-auto */}
+        <div ref={panelRef} className='bg-white h-0 pointer-events-auto'>
               <LocationSearchPanel 
               suggestions={activeField === 'pickup' ? pickupSuggestions : destinationSuggestions}
               setPanelOpen={setPanelOpen}
@@ -276,8 +265,9 @@ async function createRide(){
               />
         </div>
       </div>
-      {/* vehicle panel */}
-      <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-10 pt-12'>
+      
+      {/* All popup panels */}
+      <div ref={vehiclePanelRef} className={`fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-10 pt-12 ${!vehiclePanel ? 'pointer-events-none' : ''}`} style={{willChange: 'transform', backfaceVisibility: 'hidden'}}>
             <VehiclePanel 
             selectVehicle={setVehicleType}
             fare={fare} 
@@ -285,8 +275,8 @@ async function createRide(){
             setVehiclePanel={setVehiclePanel}
             />
       </div>
-      {/* confirmRide panel */}
-      <div ref={confirmRidePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12'>  
+      
+      <div ref={confirmRidePanelRef} className={`fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12 ${!confirmRidePanel ? 'pointer-events-none' : ''}`} style={{willChange: 'transform', backfaceVisibility: 'hidden'}}>  
         <ConfirmRide 
         createRide={createRide}
         pickup={pickup}
@@ -297,8 +287,8 @@ async function createRide(){
         setVehicleFound={setVehicleFound}
         />
       </div>
-      {/* Looking for driver panel */}
-      <div ref={vehicleFoundRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12'>  
+      
+      <div ref={vehicleFoundRef} className={`fixed w-full z-10 bottom-0 translate-y-full bg-white px-3 py-6 pt-12 ${!vehicleFound ? 'pointer-events-none' : ''}`} style={{willChange: 'transform', backfaceVisibility: 'hidden'}}>  
         <LookingForDriver 
         createRide={createRide}
         pickup={pickup}
@@ -308,8 +298,8 @@ async function createRide(){
         setVehicleFound={setVehicleFound}
         />
       </div>
-      {/* Waiting for driver panel */}
-      <div ref={waitingForDriverRef} className='fixed w-full z-10 bottom-0  bg-white px-3 py-6 pt-12'>  
+      
+      <div ref={waitingForDriverRef} className={`fixed w-full z-10 bottom-0 bg-white px-3 py-6 pt-12 ${!waitingForDriver ? 'pointer-events-none' : ''}`} style={{willChange: 'transform', backfaceVisibility: 'hidden'}}>  
         <WaitingForDriver
          ride={ride} 
          setVehicleFound={setVehicleFound}
