@@ -55,7 +55,7 @@ const CaptainResetPassword = () => {
         setIsPasswordReset(true);
         toast.success('Password reset successful!');
         setTimeout(() => {
-          navigate('/login');
+          navigate('/captain-login');
         }, 3000);
       }
     } catch (err) {
@@ -201,7 +201,7 @@ const CaptainResetPassword = () => {
                 </div>
 
                 <Link
-                  to='/login'
+                  to='/captain-login'
                   className='w-full bg-black text-white font-semibold py-3 rounded-lg hover:bg-gray-800 transition-colors duration-200 text-base flex items-center justify-center'
                 >
                   Continue to Sign In

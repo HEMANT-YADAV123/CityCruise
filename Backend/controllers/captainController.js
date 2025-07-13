@@ -2,7 +2,7 @@ const captainModel = require('../models/captainModel');
 const captainService = require('../services/captainServices');
 const {validationResult} = require('express-validator')
 const blacklistTokenModel = require('../models/blacklistTokenModel');
-const { sendPasswordResetEmail } = require('./emailController');
+const { sendCaptainPasswordResetEmail } = require('./emailController');
 
 module.exports.registerController = async (req,res,next) => {
     const errors = validationResult(req);
@@ -89,7 +89,7 @@ module.exports.forgotPasswordController = async (req, res, next) => {
         await captain.save();
 
         // Send reset email
-        await sendPasswordResetEmail(email, resetToken);
+        await sendCaptainPasswordResetEmail(email, resetToken);
 
         res.status(200).json({ 
             message: 'Password reset email sent successfully',
