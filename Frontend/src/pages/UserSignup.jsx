@@ -87,8 +87,8 @@ const UserSignup = () => {
             {/* Main Container */}
             <div className='flex min-h-screen'>
                 {/* Left Side - Hidden on mobile, shown on desktop */}
-                <div className='hidden lg:flex lg:w-1/2 bg-gradient-to-br from-black to-gray-900 items-center justify-center p-12'>
-                    <div className='text-center text-white max-w-md'>
+                <div className='hidden lg:flex lg:w-1/2 bg-gradient-to-br from-black to-gray-900 items-start justify-center p-12'>
+                    <div className='text-center text-white max-w-md mt-20'>
                         <img className='w-48 h-16 mb-8 mx-auto filter brightness-0 invert' src={loginlogo} alt="CityCruise" />
                         <h1 className='text-4xl font-bold mb-6'>Join CityCruise</h1>
                         <p className='text-xl text-gray-300 mb-8'>Start your journey with us today</p>

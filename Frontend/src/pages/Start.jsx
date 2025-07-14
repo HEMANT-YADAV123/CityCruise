@@ -1,4 +1,4 @@
-import logo from '../assets/CityCruise__2_-removebg-preview.png'
+import logo from '../assets/CityCruise (1).png'
 import { Link } from 'react-router-dom'
 
 const Start = () => {
@@ -10,12 +10,12 @@ const Start = () => {
         <div 
           className='absolute inset-0 bg-cover bg-center bg-[url(https://store.yeelight.com/cdn/shop/articles/The_Accidental_Invention_How_the_Traffic_Light_Came_to_Be_1280x1100_crop_center.png?v=1700395912)]'
         >
-          <div className='absolute inset-0 bg-black bg-opacity-40'></div>
+          <div className='absolute inset-0 bg-black bg-opacity-60'></div>
         </div>
 
         {/* Header */}
         <div className='relative z-10 p-6 lg:p-8'>
-          <img className='w-32 h-16 invert' src={logo} alt="CityCruise" />
+          <img className='w-28 h-12' src={logo} alt="CityCruise" />
         </div>
 
         {/* Main Content */}

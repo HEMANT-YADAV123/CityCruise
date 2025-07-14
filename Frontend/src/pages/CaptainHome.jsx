@@ -133,9 +133,9 @@ const CaptainHome = () => {
   );
 
   return (
-    <div className="h-screen flex flex-col bg-white">
+    <div className="h-screen flex flex-col bg-white relative">
       {/* Header Section - Black theme with mobile-first logo positioning */}
-      <header className="bg-black shadow-lg border-b border-gray-800 flex items-center justify-between px-4 lg:px-6 py-3 flex-shrink-0">
+      <header className="bg-black shadow-lg border-b border-gray-800 flex items-center justify-between px-4 lg:px-6 py-3 flex-shrink-0 relative z-10">
         <Link to='/captain-home' className="flex items-center">
           <img className="w-24 h-8 lg:w-32 lg:h-10 invert" src={logo} alt="CityCruise" />
         </Link>
@@ -200,7 +200,7 @@ const CaptainHome = () => {
         <LiveTracking />
         
         {/* Floating Stats Card */}
-        <div className="absolute top-4 left-4 bg-black text-white rounded-lg shadow-lg p-4 min-w-48 lg:min-w-64 border border-gray-800">
+        <div className="absolute top-4 left-4 bg-black text-white rounded-lg shadow-lg p-4 min-w-48 lg:min-w-64 border border-gray-800 z-10">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-base lg:text-lg font-semibold">Today's Stats</h3>
             <div className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -223,7 +223,7 @@ const CaptainHome = () => {
         </div>
 
         {/* Quick Actions Floating Button */}
-        <div className="absolute bottom-4 right-4">
+        <div className="absolute bottom-4 right-4 z-10">
           <button className="bg-black text-white p-3 rounded-full shadow-lg hover:bg-gray-800 transition-colors duration-200 border border-gray-800">
             <svg className="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -233,16 +233,22 @@ const CaptainHome = () => {
       </div>
 
       {/* Captain Details Section - Black theme */}
-      <div className="bg-black text-white border-t border-gray-800 shadow-lg flex-shrink-0">
+      <div className="bg-black text-white border-t border-gray-800 shadow-lg flex-shrink-0 relative z-10">
         <div className="p-4 lg:p-6">
           <CaptainDetails />
         </div>
       </div>
 
-      {/* Ride popup panel - Black theme */}
+      {/* Popup Overlay - Only show when popups are active */}
+      {(ridePopUpPanel || confirmRidePopUpPanel) && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40" />
+      )}
+
+      {/* Ride popup panel - Black theme with higher z-index */}
       <div
         ref={ridePopUpPanelRef}
         className="fixed w-full z-50 translate-y-full bottom-0 bg-black text-white rounded-t-2xl shadow-2xl border-t border-gray-800"
+        style={{ zIndex: 60 }}
       >
         <div className="p-4 lg:p-6">
           {/* Handle bar */}
@@ -257,12 +263,13 @@ const CaptainHome = () => {
         </div>
       </div>
 
-      {/* Confirm Ride PopUp - Black theme */}
+      {/* Confirm Ride PopUp - Black theme with highest z-index */}
       <div
         ref={confirmRidePopUpPanelRef}
         className="fixed w-full h-screen z-50 translate-y-full bottom-0 bg-black text-white"
+        style={{ zIndex: 70 }}
       >
-        <div className="p-4 lg:p-6">
+        <div className="p-4 lg:p-6 h-full overflow-y-auto">
           {/* Handle bar */}
           <div className="w-12 h-1 bg-gray-600 rounded-full mx-auto mb-6"></div>
           

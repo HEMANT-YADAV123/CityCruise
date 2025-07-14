@@ -117,8 +117,8 @@ const Captainsignup = () => {
             {/* Main Container */}
             <div className='flex min-h-screen'>
                 {/* Left Side - Hidden on mobile, shown on desktop */}
-                <div className='hidden lg:flex lg:w-1/2 bg-gradient-to-br from-green-800 to-green-900 items-center justify-center p-12'>
-                    <div className='text-center text-white max-w-md'>
+                <div className='hidden lg:flex lg:w-1/2 bg-gradient-to-br from-green-800 to-green-900 items-start justify-center p-12'>
+                    <div className='text-center text-white max-w-md mt-20'>
                         <img className='w-48 h-16 mb-8 mx-auto filter brightness-0 invert' src={loginlogo} alt="CityCruise" />
                         <h1 className='text-4xl font-bold mb-6'>Become a Captain</h1>
                         <p className='text-xl text-green-200 mb-8'>Start earning with your vehicle today</p>
