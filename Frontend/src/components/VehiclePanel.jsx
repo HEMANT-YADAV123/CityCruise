@@ -56,7 +56,7 @@ const VehiclePanel = ({ selectVehicle, fare, setConfirmRidePanel, setVehiclePane
                 <h5 className='font-medium text-sm'>2 min away</h5>
                 <p className='font-normal text-xs text-gray-600'>Affordable, auto rides</p>
               </div>
-              <h2 className='text-lg font-semibold'>₹{props.fare.auto}</h2>
+              <h2 className='text-lg font-semibold'>₹{fare.auto}</h2>
             </div>
 
     </div>

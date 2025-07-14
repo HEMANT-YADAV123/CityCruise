@@ -86,11 +86,16 @@ module.exports.confirmRide = async (req,res) => {
     try {
         const ride = await rideService.confirmRide({ rideId ,captain: req.captain });
 
-        sendMessageToSocketId(ride.user.socketId,{
+        // Populate both user and captain data
+        const populatedRide = await rideModel.findOne({_id: ride._id})
+            .populate('user')
+            .populate('captain');
+
+        sendMessageToSocketId(populatedRide.user.socketId,{
             event: 'ride-confirmed',
-            data: ride
+            data: populatedRide
         })
-        return res.status(200).json(ride);
+        return res.status(200).json(populatedRide);
     } catch (error) {
         console.log(error);
         return res.status(500).json({ message: error.message });
@@ -108,11 +113,17 @@ module.exports.startRide = async (req,res) => {
 
     try {
         const ride = await rideService.startRide({rideId, otp, captain: req.captain });
-        sendMessageToSocketId(ride.user.socketId,{
+
+        // Populate both user and captain data
+        const populatedRide = await rideModel.findOne({_id: ride._id})
+            .populate('user')
+            .populate('captain');
+
+        sendMessageToSocketId(populatedRide.user.socketId,{
             event: 'ride-started',
-            data: ride
+            data: populatedRide
         })
-        return res.status(200).json(ride);
+        return res.status(200).json(populatedRide);
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }

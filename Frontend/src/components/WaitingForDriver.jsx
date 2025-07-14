@@ -2,6 +2,19 @@
 import car from '../assets/car.png'
 
 const WaitingForDriver = (props) => {
+    // Add safety check for captain data
+  if (!props.ride?.captain || typeof props.ride.captain === 'string') {
+    return (
+      <div>
+        <h5 onClick={() => {props.setWaitingForDriver(false)}} className='p-1 text-center w-[93%] absolute top-0'>
+          <i className="text-3xl text-gray-200 ri-arrow-down-wide-line"></i>
+        </h5>
+        <div className='flex items-center justify-center p-8'>
+          <p className='text-lg text-gray-500'>Loading driver details...</p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div>
           <h5 onClick={()=>{props.setwaitingForDriver(false)}} className='p-1 text-center w-[93%] absolute top-0'><i className="text-3xl text-gray-200 ri-arrow-down-wide-line"></i></h5>
@@ -14,7 +27,7 @@ const WaitingForDriver = (props) => {
                 <div className='text-right flex flex-col justify-between'>
                     <h2 className='text-lg font-semibold capitalize'>{props.ride?.captain.fullname.firstname + " " + props.ride?.captain.fullname.lastname}</h2>
                     <h4 className='text-xl font-semibold -mt-1 -mb-1'>{props.ride?.captain.vehicle.plate}</h4>
-                    <p className='text-sm font-sm text-slate-700'>Maruti Suzuki Alto 800</p>
+                    <p className='text-sm font-sm text-slate-700'>{props.ride?.captain?.vehicle?.vehicleType || 'Vehicle'}</p>
                     <h1 className='text-xl font-semibold'> OTP - {props.ride?.otp} </h1>
                 </div>
             </div>
