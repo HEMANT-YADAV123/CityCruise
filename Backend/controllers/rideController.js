@@ -21,16 +21,32 @@ module.exports.createRide = async (req,res,next) => {
         const captainsInRadius = await mapsService.getCaptainsInTheRadius(pickupCoordinates.ltd,pickupCoordinates.lng,3);//three things lat,lng and radius(2km);
         ride.otp = "";
 
-        const rideWithUser = await rideModel.findOne({_id: ride._id}).populate('user');
+        // Filter captains based on status (active) and vehicle type
+        const availableCaptains = captainsInRadius.filter(captain => {
+            return captain.status === 'active' && captain.vehicle.vehicleType === vehicleType;
+        });
+        console.log(`Found ${availableCaptains.length} available captains for ${vehicleType} vehicle type`);
 
-        captainsInRadius.map(captain => {
+        // Only send ride requests to available captains
+        if (availableCaptains.length > 0) {
+            ride.otp = "";
+            const rideWithUser = await rideModel.findOne({_id: ride._id}).populate('user');
 
-            sendMessageToSocketId(captain.socketId,{
-                event: 'new-ride',
-                data: rideWithUser
-            })
-        })
-        
+            availableCaptains.map(captain => {
+                console.log(`Sending ride request to captain: ${captain._id}, socketId: ${captain.socketId}`);
+                sendMessageToSocketId(captain.socketId,{
+                    event: 'new-ride',
+                    data: rideWithUser
+                });
+            });
+        } else {
+            console.log(`No available captains found for ${vehicleType} vehicle type`);
+            // Optionally, you can emit an event to the user that no captains are available
+            // sendMessageToSocketId(req.user.socketId, {
+            //     event: 'no-captains-available',
+            //     data: { message: 'No captains available for your vehicle type' }
+            // });
+        }
     } catch (error) {
         console.log(error);
         return res.status(500).json({message: error.message});

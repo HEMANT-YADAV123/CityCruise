@@ -3,6 +3,7 @@ const captainService = require('../services/captainServices');
 const {validationResult} = require('express-validator')
 const blacklistTokenModel = require('../models/blacklistTokenModel');
 const { sendCaptainPasswordResetEmail } = require('./emailController');
+const { sendMessageToSocketId } = require('../socket');
 
 module.exports.registerController = async (req,res,next) => {
     const errors = validationResult(req);
@@ -219,6 +220,16 @@ module.exports.updateCaptainStatus = async(req,res,next) => {
                 message: 'Captain not found'
             });
         }
+
+        // Emit status change event if captain has socketId
+        if (updatedCaptain.socketId) {
+            sendMessageToSocketId(updatedCaptain.socketId, {
+                event: 'status-updated',
+                data: { status }
+            });
+        }
+
+        console.log(`Captain ${updatedCaptain._id} status updated to ${status}`);
 
         res.status(200).json({
             message: 'Status updated successfully',

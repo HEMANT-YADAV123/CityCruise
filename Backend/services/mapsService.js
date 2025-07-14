@@ -75,15 +75,22 @@ module.exports.getAutoCompleteSuggestions = async (input) => {
 
 }
 
-module.exports.getCaptainsInTheRadius = async (ltd,lng,radius) => {
-    
-    const captains = await captainModel.find({
-        location: {
-            $geoWithin: {
-                $centerSphere: [[ ltd, lng ], radius / 6371 ]
-            }
-        }
-    });
+module.exports.getCaptainsInTheRadius = async (ltd, lng, radius) => {
+    try {
+        // Calculate the radius in degrees (approximately)
+        const radiusInDegrees = radius / 111; // 1 degree ≈ 111 km
 
-    return captains;
-}
+        const captains = await captainModel.find({
+            location: {
+                $geoWithin: {
+                    $centerSphere: [[lng, ltd], radiusInDegrees / 6371] // 6371 is Earth's radius in km
+                }
+            }
+        }).select('_id socketId status vehicle location fullname');
+
+        return captains;
+    } catch (error) {
+        console.error('Error finding captains in radius:', error);
+        throw error;
+    }
+};

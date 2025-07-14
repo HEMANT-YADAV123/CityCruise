@@ -127,18 +127,43 @@ useEffect(() => {
   }, []);
 
   // Only show ride popup if captain is online/active
-  socket.on("new-ride", (data) => {
-    console.log(data);
-    // Only show ride popup if captain is active
-    if (captain.status === 'active' && isOnline) {
-      setRide(data);
-      setRidePopUpPanel(true);
-    } else {
-      console.log("Captain is offline, ride popup not shown");
+useEffect(() => {
+    const handleNewRide = (data) => {
+        console.log('New ride received:', data);
+        
+        // Multiple checks to ensure captain should receive this ride
+        if (captain && captain.status === 'active' && isOnline) {
+            console.log('Captain is active, showing ride popup');
+            setRide(data);
+            setRidePopUpPanel(true);
+        } else {
+            console.log('Captain is offline or inactive, ride popup not shown');
+            // Optionally, you can emit back to server that captain is not available
+            socket.emit('captain-not-available', {
+                rideId: data._id,
+                captainId: captain._id,
+                reason: 'Captain is offline'
+            });
+        }
+    };
+
+    // Add event listener
+    socket.on("new-ride", handleNewRide);
+
+    // Cleanup event listener on unmount
+    return () => {
+        socket.off("new-ride", handleNewRide);
+    };
+}, [captain, isOnline, socket]);
+
+// Also add this effect to handle status changes
+useEffect(() => {
+    // When captain goes offline, close any open ride popups
+    if (!isOnline) {
+        setRidePopUpPanel(false);
+        setConfirmRidePopUpPanel(false);
     }
-    // setRide(data);
-    // setRidePopUpPanel(true);
-  });
+}, [isOnline]);
 
   async function confirmRide() {
     // Double check captain is still active before confirming

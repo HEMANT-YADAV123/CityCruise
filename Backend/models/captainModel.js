@@ -79,6 +79,15 @@ const captainSchema = new mongoose.Schema({
     timestamps: true // This will add createdAt and updatedAt automatically
 }) 
 
+captainSchema.index({ location: '2dsphere' });
+
+// Add compound index for better query performance
+captainSchema.index({ 
+    status: 1, 
+    'vehicle.vehicleType': 1, 
+    location: '2dsphere' 
+});
+
 captainSchema.methods.generateAuthToken = function(){
     const token = jwt.sign(
         {_id: this._id },
