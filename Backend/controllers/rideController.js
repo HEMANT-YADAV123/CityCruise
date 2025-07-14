@@ -16,15 +16,33 @@ module.exports.createRide = async (req,res,next) => {
         res.status(201).json(ride);
 
         const pickupCoordinates = await mapsService.getAddressCoordinates(pickup);
-        console.log(pickupCoordinates);
+        console.log('Pickup coordinates:', pickupCoordinates);
 
-        const captainsInRadius = await mapsService.getCaptainsInTheRadius(pickupCoordinates.ltd,pickupCoordinates.lng,3);//three things lat,lng and radius(2km);
+        const captainsInRadius = await mapsService.getCaptainsInTheRadius(pickupCoordinates.ltd,pickupCoordinates.lng,3);
+        console.log(`Total captains in radius: ${captainsInRadius.length}`);
+        
+        // Debug: Log all captains data
+        captainsInRadius.forEach(captain => {
+            console.log(`Captain ${captain._id}:`, {
+                status: captain.status,
+                vehicleType: captain.vehicle?.vehicleType,
+                location: captain.location,
+                socketId: captain.socketId
+            });
+        });
+        
         ride.otp = "";
 
         // Filter captains based on status (active) and vehicle type
         const availableCaptains = captainsInRadius.filter(captain => {
-            return captain.status === 'active' && captain.vehicle.vehicleType === vehicleType;
+            const isActive = captain.status === 'active';
+            const isCorrectVehicle = captain.vehicle && captain.vehicle.vehicleType === vehicleType;
+            
+            console.log(`Captain ${captain._id}: active=${isActive}, vehicleType=${captain.vehicle?.vehicleType}, matches=${isCorrectVehicle}`);
+            
+            return isActive && isCorrectVehicle;
         });
+        
         console.log(`Found ${availableCaptains.length} available captains for ${vehicleType} vehicle type`);
 
         // Only send ride requests to available captains
@@ -32,25 +50,30 @@ module.exports.createRide = async (req,res,next) => {
             ride.otp = "";
             const rideWithUser = await rideModel.findOne({_id: ride._id}).populate('user');
 
-            availableCaptains.map(captain => {
+            availableCaptains.forEach(captain => {
                 console.log(`Sending ride request to captain: ${captain._id}, socketId: ${captain.socketId}`);
-                sendMessageToSocketId(captain.socketId,{
-                    event: 'new-ride',
-                    data: rideWithUser
-                });
+                if (captain.socketId) {
+                    sendMessageToSocketId(captain.socketId,{
+                        event: 'new-ride',
+                        data: rideWithUser
+                    });
+                } else {
+                    console.log(`Captain ${captain._id} has no socketId`);
+                }
             });
         } else {
             console.log(`No available captains found for ${vehicleType} vehicle type`);
-            // Optionally, you can emit an event to the user that no captains are available
-            // sendMessageToSocketId(req.user.socketId, {
-            //     event: 'no-captains-available',
-            //     data: { message: 'No captains available for your vehicle type' }
-            // });
+            // Optional: Notify user that no captains are available
+            if (req.user.socketId) {
+                sendMessageToSocketId(req.user.socketId, {
+                    event: 'no-captains-available',
+                    data: { message: 'No captains available for your vehicle type' }
+                });
+            }
         }
     } catch (error) {
-        console.log(error);
+        console.log('Error in createRide:', error);
         return res.status(500).json({message: error.message});
-        
     }
 }
 
