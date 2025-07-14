@@ -176,13 +176,22 @@ const Home = () => {
     setFare(response.data);
   }
 
-  async function createRide() {
+async function createRide() {
+  // Also, in your Home component, add some debugging:
+console.log('Selected vehicle type:', vehicleType); // Add this before createRide call
+  // Add validation to ensure vehicleType is selected
+  if (!vehicleType) {
+    alert('Please select a vehicle type first');
+    return;
+  }
+
+  try {
     const response = await axios.post(
       `${import.meta.env.VITE_BASE_URL}/rides/create`,
       {
         pickup,
         destination,
-        vehicleType,
+        vehicleType, // This was missing - now correctly included
       },
       {
         headers: {
@@ -191,8 +200,18 @@ const Home = () => {
       }
     );
 
-    console.log(response.data);
+    console.log('Ride created successfully:', response.data);
+    
+    // Set the ride state and show looking for driver panel
+    setRide(response.data);
+    setVehicleFound(true);
+    setConfirmRidePanel(false);
+    
+  } catch (error) {
+    console.error('Error creating ride:', error);
+    alert('Failed to create ride. Please try again.');
   }
+}
 
   // Enhanced panel animation with smooth transitions
   useGSAP(

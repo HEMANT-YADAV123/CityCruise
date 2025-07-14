@@ -3,15 +3,23 @@ import car from '../assets/car.png'
 import bike from '../assets/bike.png'
 import auto from '../assets/auto.png'
 
-const VehiclePanel = (props) => {
+const VehiclePanel = ({ selectVehicle, fare, setConfirmRidePanel, setVehiclePanel }) => {
+  const handleVehicleSelect = (vehicleType) => {
+    // Set the selected vehicle type
+    selectVehicle(vehicleType);
+    
+    // Close vehicle panel and open confirm ride panel
+    setVehiclePanel(false);
+    setConfirmRidePanel(true);
+  };
   return (
     <div>
-            <h5 onClick={()=>{props.setVehiclePanel(false)}} className='p-1 text-center w-[93%] absolute top-0'><i className="text-3xl text-gray-200 ri-arrow-down-wide-line"></i></h5>    
+            <h5 onClick={()=>{setVehiclePanel(false)}} className='p-1 text-center w-[93%] absolute top-0'><i className="text-3xl text-gray-200 ri-arrow-down-wide-line"></i></h5>    
             <h3 className='text-2xl font-semibold mb-5'>Choose a Vehicle</h3>
 
             <div onClick={()=>{
-              props.setConfirmRidePanel(true)
-              props.selectVehicle('car')
+              setConfirmRidePanel(true)
+              handleVehicleSelect('car')
               }}  
               className='flex border-2 active:border-black mb-2 rounded-xl w-full p-3 items-center justify-between'>
               <img className='h-12' src={car} alt="" />
@@ -20,12 +28,12 @@ const VehiclePanel = (props) => {
                 <h5 className='font-medium text-sm'>2 min away</h5>
                 <p className='font-normal text-xs text-gray-600'>Affordable, compact rides</p>
               </div>
-              <h2 className='text-lg font-semibold'>₹{props.fare.car}</h2>
+              <h2 className='text-lg font-semibold'>₹{fare.car}</h2>
             </div>
 
             <div onClick={()=>{
-              props.setConfirmRidePanel(true)
-              props.selectVehicle('moto')
+              setConfirmRidePanel(true)
+              handleVehicleSelect('motorcycle')
               }}  
               className='flex border-2 active:border-black mb-2 rounded-xl w-full p-3 items-center justify-between'>
               <img className='h-12' src={bike} alt="" />
@@ -34,12 +42,12 @@ const VehiclePanel = (props) => {
                 <h5 className='font-medium text-sm'>3 min away</h5>
                 <p className='font-normal text-xs text-gray-600'>Affordable, Motorcycle rides</p>
               </div>
-              <h2 className='text-lg font-semibold'>₹{props.fare.moto}</h2>
+              <h2 className='text-lg font-semibold'>₹{fare.moto}</h2>
             </div>
             
             <div onClick={()=>{
-              props.setConfirmRidePanel(true)
-              props.selectVehicle('auto')
+              setConfirmRidePanel(true)
+              handleVehicleSelect('auto')
               }}  
               className='flex border-2 active:border-black mb-2 rounded-xl w-full p-3 items-center justify-between'>
               <img className='h-12' src={auto} alt="" />
