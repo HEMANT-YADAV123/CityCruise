@@ -103,6 +103,7 @@ const Home = () => {
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
+            //Use axios.interceptors to automatically include token headers, so you don’t have to write Authorization manually everywhere.
           },
         }
       );

@@ -13,7 +13,7 @@ const rideRoutes = require('./routes/rideRoutes');
 connectToDb();
 app.use(cors({
     origin: true, // reflect the request origin(in devp we can use true but for production we should only specify our frontend origins)
-    credentials: true}));//accept the credentials(usually cookie) from these origins
+    credentials: true}));//sending the credentials(usually cookie) to these specified origins.
 app.use(express.json());
 app.use(express.urlencoded({extended:true}))
 app.use(cookieParser());

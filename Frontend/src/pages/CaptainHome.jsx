@@ -20,10 +20,65 @@ const CaptainHome = () => {
   const [confirmRidePopUpPanel, setConfirmRidePopUpPanel] = useState(false);
   const confirmRidePopUpPanelRef = useRef(null);
   const [ride, setRide] = useState(null);
-  const [isOnline, setIsOnline] = useState(true);
+  const [isOnline, setIsOnline] = useState(false);
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
 
   const { socket } = useContext(SocketContext);
-  const { captain } = useContext(CaptainDataContext);
+  const { captain, setCaptain } = useContext(CaptainDataContext);
+
+// Initialize online status from captain's status
+useEffect(() => {
+    if (captain) {
+      setIsOnline(captain.status === 'active');
+    }
+  }, [captain]);
+
+// Function to update captain status
+  const updateCaptainStatus = async (newStatus) => {
+    if (isUpdatingStatus) return;
+    
+    setIsUpdatingStatus(true);
+    try {
+      const response = await axios.patch(
+        `${import.meta.env.VITE_BASE_URL}/captains/status`,
+        { status: newStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        // Update local state
+        setIsOnline(newStatus === 'active');
+        
+        // Update captain context
+        setCaptain(prev => ({
+          ...prev,
+          status: newStatus
+        }));
+
+        // Emit status change to socket
+        socket.emit('captain-status-change', {
+          captainId: captain._id,
+          status: newStatus
+        });
+      }
+    } catch (error) {
+      console.error("Status update failed:", error);
+      // Revert the UI state if API call fails
+      setIsOnline(captain.status === 'active');
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  };  
+
+  // Handle status toggle
+  const handleStatusToggle = () => {
+    const newStatus = isOnline ? 'inactive' : 'active';
+    updateCaptainStatus(newStatus);
+  };
 
   const handleLogout = async () => {
     try {
@@ -33,6 +88,7 @@ const CaptainHome = () => {
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
+            //Use axios.interceptors to automatically include token headers, so you don’t have to write Authorization manually everywhere.
           },
         }
       );
@@ -70,13 +126,27 @@ const CaptainHome = () => {
     updateLocation();
   }, []);
 
+  // Only show ride popup if captain is online/active
   socket.on("new-ride", (data) => {
     console.log(data);
-    setRide(data);
-    setRidePopUpPanel(true);
+    // Only show ride popup if captain is active
+    if (captain.status === 'active' && isOnline) {
+      setRide(data);
+      setRidePopUpPanel(true);
+    } else {
+      console.log("Captain is offline, ride popup not shown");
+    }
+    // setRide(data);
+    // setRidePopUpPanel(true);
   });
 
   async function confirmRide() {
+    // Double check captain is still active before confirming
+    if (captain.status !== 'active') {
+      alert("You must be online to accept rides");
+      return;
+    }
+    try{
     const response = await axios.post(
       `${import.meta.env.VITE_BASE_URL}/rides/confirm`,
       {
@@ -89,9 +159,14 @@ const CaptainHome = () => {
         },
       }
     );
-
-    setRidePopUpPanel(false);
-    setConfirmRidePopUpPanel(true);
+    if (response.status === 200) {
+        setRidePopUpPanel(false);
+        setConfirmRidePopUpPanel(true);
+      }
+    } catch (error) {
+      console.error("Ride confirmation failed:", error);
+      alert("Failed to confirm ride. Please try again.");
+    }
   }
 
   useGSAP(
@@ -147,10 +222,11 @@ const CaptainHome = () => {
               {isOnline ? 'Online' : 'Offline'}
             </span>
             <button
-              onClick={() => setIsOnline(!isOnline)}
+              onClick={handleStatusToggle}
+              disabled={isUpdatingStatus}
               className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
                 isOnline ? 'bg-green-600' : 'bg-gray-600'
-              }`}
+              }${isUpdatingStatus ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <span
                 className={`inline-block h-4 w-4 transform rounded-full bg-white transition duration-200 ${
@@ -170,10 +246,11 @@ const CaptainHome = () => {
 
           {/* Mobile Status Toggle */}
           <button
-            onClick={() => setIsOnline(!isOnline)}
+            onClick={handleStatusToggle}
+            disabled={isUpdatingStatus}
             className={`lg:hidden relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 ${
               isOnline ? 'bg-green-600' : 'bg-gray-600'
-            }`}
+            }${isUpdatingStatus ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             <span
               className={`inline-block h-4 w-4 transform rounded-full bg-white transition duration-200 ${
@@ -222,14 +299,39 @@ const CaptainHome = () => {
           </div>
         </div>
 
-        {/* Quick Actions Floating Button */}
-        <div className="absolute bottom-4 right-4 z-10">
-          <button className="bg-black text-white p-3 rounded-full shadow-lg hover:bg-gray-800 transition-colors duration-200 border border-gray-800">
-            <svg className="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-          </button>
-        </div>
+        {/* Quick Actions Floating Button - Only show when online */}
+        {isOnline && (
+          <div className="absolute bottom-4 right-4 z-10">
+            <button className="bg-black text-white p-3 rounded-full shadow-lg hover:bg-gray-800 transition-colors duration-200 border border-gray-800">
+              <svg className="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+            </button>
+          </div>
+        )}
+
+
+      {/* Offline Overlay */}
+        {!isOnline && (
+          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-20">
+            <div className="bg-black text-white p-6 rounded-lg shadow-lg border border-gray-800 text-center">
+              <div className="w-16 h-16 bg-gray-600 rounded-full mx-auto mb-4 flex items-center justify-center">
+                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728L5.636 5.636m12.728 12.728L5.636 5.636" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">You're Offline</h3>
+              <p className="text-gray-300 mb-4">Turn on your status to start receiving ride requests</p>
+              <button
+                onClick={handleStatusToggle}
+                disabled={isUpdatingStatus}
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-medium transition-colors disabled:opacity-50"
+              >
+                {isUpdatingStatus ? 'Updating...' : 'Go Online'}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Captain Details Section - Black theme */}
@@ -244,42 +346,46 @@ const CaptainHome = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40" />
       )}
 
-      {/* Ride popup panel - Black theme with higher z-index */}
-      <div
-        ref={ridePopUpPanelRef}
-        className="fixed w-full z-50 translate-y-full bottom-0 bg-black text-white rounded-t-2xl shadow-2xl border-t border-gray-800"
-        style={{ zIndex: 60 }}
-      >
-        <div className="p-4 lg:p-6">
-          {/* Handle bar */}
-          <div className="w-12 h-1 bg-gray-600 rounded-full mx-auto mb-6"></div>
-          
-          <RidePopUp
-            ride={ride}
-            setRidePopUpPanel={setRidePopUpPanel}
-            setConfirmRidePopUpPanel={setConfirmRidePopUpPanel}
-            confirmRide={confirmRide}
-          />
+      {/* Ride popup panel - Only show if captain is online */}
+      {isOnline && (
+        <div
+          ref={ridePopUpPanelRef}
+          className="fixed w-full z-50 translate-y-full bottom-0 bg-black text-white rounded-t-2xl shadow-2xl border-t border-gray-800"
+          style={{ zIndex: 60 }}
+        >
+          <div className="p-4 lg:p-6">
+            {/* Handle bar */}
+            <div className="w-12 h-1 bg-gray-600 rounded-full mx-auto mb-6"></div>
+            
+            <RidePopUp
+              ride={ride}
+              setRidePopUpPanel={setRidePopUpPanel}
+              setConfirmRidePopUpPanel={setConfirmRidePopUpPanel}
+              confirmRide={confirmRide}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Confirm Ride PopUp - Black theme with highest z-index */}
-      <div
-        ref={confirmRidePopUpPanelRef}
-        className="fixed w-full h-screen z-50 translate-y-full bottom-0 bg-black text-white"
-        style={{ zIndex: 70 }}
-      >
-        <div className="p-4 lg:p-6 h-full overflow-y-auto">
-          {/* Handle bar */}
-          <div className="w-12 h-1 bg-gray-600 rounded-full mx-auto mb-6"></div>
-          
-          <ConfirmRidePopUp
-            ride={ride}
-            setConfirmRidePopUpPanel={setConfirmRidePopUpPanel}
-            setRidePopUpPanel={setRidePopUpPanel}
-          />
+      {/* Confirm Ride PopUp - Only show if captain is online */}
+      {isOnline && (
+        <div
+          ref={confirmRidePopUpPanelRef}
+          className="fixed w-full h-screen z-50 translate-y-full bottom-0 bg-black text-white"
+          style={{ zIndex: 70 }}
+        >
+          <div className="p-4 lg:p-6 h-full overflow-y-auto">
+            {/* Handle bar */}
+            <div className="w-12 h-1 bg-gray-600 rounded-full mx-auto mb-6"></div>
+            
+            <ConfirmRidePopUp
+              ride={ride}
+              setConfirmRidePopUpPanel={setConfirmRidePopUpPanel}
+              setRidePopUpPanel={setRidePopUpPanel}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

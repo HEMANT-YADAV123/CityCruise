@@ -25,7 +25,7 @@ const UserProtectWrapper = ({children}) => {
         }
         axios.get(`${import.meta.env.VITE_BASE_URL}/users/profile`,{
           headers: {
-              Authorization: `Bearer ${token}`
+              Authorization: `Bearer ${token}`//Use axios.interceptors to automatically include token headers, so you don’t have to write Authorization manually everywhere.
           }
         }).then((response) =>{
             if(response.status === 200)

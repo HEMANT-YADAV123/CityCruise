@@ -174,7 +174,64 @@ module.exports.resetPasswordController = async (req, res, next) => {
 };
 
 module.exports.getCaptainProfile = async (req,res,next) => {
-    res.status(200).json({ captain: req.captain });
+    try {
+        const captain = await captainModel.findById(req.captain._id).select('-password');
+        
+        if (!captain) {
+            return res.status(404).json({
+                message: 'Captain not found'
+            });
+        }
+
+        res.status(200).json({
+            captain
+        });
+
+    } catch (error) {
+        console.error('Profile fetch error:', error);
+        res.status(500).json({
+            message: 'Internal server error',
+            error: error.message
+        });
+    }
+}
+
+module.exports.updateCaptainStatus = async(req,res,next) => {
+    try {
+        const { status } = req.body;
+        
+        // Validate status
+        if (!['active', 'inactive'].includes(status)) {
+            return res.status(400).json({
+                message: 'Invalid status. Must be either "active" or "inactive"'
+            });
+        }
+
+        // Update captain status
+        const updatedCaptain = await captainModel.findByIdAndUpdate(
+            req.captain._id,
+            { status },
+            { new: true, runValidators: true }
+        ).select('-password');
+
+        if (!updatedCaptain) {
+            return res.status(404).json({
+                message: 'Captain not found'
+            });
+        }
+
+        res.status(200).json({
+            message: 'Status updated successfully',
+            captain: updatedCaptain
+        });
+
+    } catch (error) {
+        console.error('Status update error:', error);
+        res.status(500).json({
+            message: 'Internal server error',
+            error: error.message
+        });
+    }
 }
 
 module.exports.logoutController = async (req,res,next) => {

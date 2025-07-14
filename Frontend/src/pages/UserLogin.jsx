@@ -23,7 +23,7 @@ const UserLogin = () => {
       password: password
     }
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData,  { withCredentials: true })
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData,  { withCredentials: true })//using with credentials true we can accept the cookie from the backend(we can see the cookie in dev tools inside cookie)
 
       if (response.status === 200) {
         const data = response.data;
