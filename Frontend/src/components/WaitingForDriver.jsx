@@ -22,13 +22,13 @@ const WaitingForDriver = (props) => {
             <div className='flex items-center justify-between'>
                 <div className='flex flex-col justify-between gap-5'>
                     <img className='h-16 ' src={car} alt="" />
-                    <h1 className='text-slate-700 font-semibold'>Waiting...</h1>
+                    <h1 className='text-slate-500 font-semibold'>Waiting...</h1>
                 </div>
                 <div className='text-right flex flex-col justify-between'>
                     <h2 className='text-lg font-semibold capitalize'>{props.ride?.captain.fullname.firstname + " " + props.ride?.captain.fullname.lastname}</h2>
                     <h4 className='text-xl font-semibold -mt-1 -mb-1'>{props.ride?.captain.vehicle.plate}</h4>
                     <p className='text-sm font-sm text-slate-700'>{props.ride?.captain?.vehicle?.vehicleType || 'Vehicle'}</p>
-                    <h1 className='text-xl font-semibold'> OTP - {props.ride?.otp} </h1>
+                    <h1 className='text-xl font-semibold'> OTP -{props.ride?.otp} </h1>
                 </div>
             </div>
                 <div className='flex gap-2 flex-col justify-between items-center'>

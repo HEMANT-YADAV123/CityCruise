@@ -31,7 +31,7 @@ module.exports.createRide = async (req,res,next) => {
             });
         });
         
-        ride.otp = "";
+        // ride.otp = "";
 
         // Filter captains based on status (active) and vehicle type
         const availableCaptains = captainsInRadius.filter(captain => {
@@ -47,7 +47,7 @@ module.exports.createRide = async (req,res,next) => {
 
         // Only send ride requests to available captains
         if (availableCaptains.length > 0) {
-            ride.otp = "";
+            // ride.otp = "";
             const rideWithUser = await rideModel.findOne({_id: ride._id}).populate('user');
 
             availableCaptains.forEach(captain => {
