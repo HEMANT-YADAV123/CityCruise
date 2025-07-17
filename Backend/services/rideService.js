@@ -12,9 +12,9 @@ async function getFare(pickup,destination){
     const distanceTime = await mapsService.getDistanceTime(pickup,destination);//it will return us the distance and the take between these 2 endpoints.
 
     const baseFare = {
-        auto: 20,
-        car: 40,
-        moto: 15
+        auto: 15,
+        car: 25,
+        moto: 9
     };
 
     const perKmRate = {

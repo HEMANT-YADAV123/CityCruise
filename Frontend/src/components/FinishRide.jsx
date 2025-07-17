@@ -28,7 +28,7 @@ const FinishRide = (props) => {
                         <img className='h-16 w-16 rounded-full object-contain'src={Customer} alt="" />
                         <h2 className='text-lg font-medium'>{props.ride?.user.fullname.firstname + " " + props.ride?.user.fullname.lastname}</h2>
                     </div>
-                    <h5 className='text-lg font-semibold'>2.2 KM</h5>
+                    <h5 className='text-lg font-semibold'>{props.distanceTime?.distance}</h5>
                 </div>
                 
                 <div className='flex gap-2 flex-col justify-between items-center'>

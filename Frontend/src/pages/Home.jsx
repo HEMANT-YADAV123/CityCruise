@@ -73,7 +73,6 @@ const Home = () => {
   }, [panelOpen]);
 
   socket.on("ride-confirmed", (ride) => {
-    console.log(ride);
     setVehicleFound(false);
     setWaitingForDriver(true);
     setRide(ride);
