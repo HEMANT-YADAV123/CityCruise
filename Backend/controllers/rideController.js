@@ -112,9 +112,10 @@ module.exports.confirmRide = async (req,res) => {
         // Populate both user and captain data
         const populatedRide = await rideModel.findOne({_id: ride._id})
             .populate('user')
-            .populate('captain');
+            .populate('captain')
+            .select('otp');
 
-        sendMessageToSocketId(populatedRide.user.socketId,{
+        sendMessageToSocketId(populatedRide.user.socketId,{//send socket msg to user.
             event: 'ride-confirmed',
             data: populatedRide
         })

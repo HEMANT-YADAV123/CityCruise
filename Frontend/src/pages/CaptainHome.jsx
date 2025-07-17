@@ -134,7 +134,7 @@ useEffect(() => {
         // Multiple checks to ensure captain should receive this ride
         if (captain && captain.status === 'active' && isOnline) {
             console.log('Captain is active, showing ride popup');
-            setRide(data);
+            setRide(data);//set the create ride data coming from user.
             setRidePopUpPanel(true);
         } else {
             console.log('Captain is offline or inactive, ride popup not shown');
