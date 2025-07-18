@@ -153,6 +153,24 @@ module.exports.startRide = async (req,res) => {
     }
 }
 
+module.exports.getActiveRide = async (req, res) => {
+    try {
+        const activeRide = await rideModel.findOne({
+            user: req.user._id,
+            status: { $in: ['accepted', 'ongoing'] }
+        }).populate('user').populate('captain');
+
+        if (!activeRide) {
+            return res.status(404).json({ message: 'No active ride found' });
+        }
+
+        return res.status(200).json(activeRide);
+    } catch (error) {
+        console.log('Error fetching active ride:', error);
+        return res.status(500).json({ message: error.message });
+    }
+};
+
 module.exports.endRide = async (req,res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty())

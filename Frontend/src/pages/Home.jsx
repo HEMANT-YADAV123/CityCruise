@@ -37,12 +37,44 @@ const Home = () => {
   const [fare, setFare] = useState({});
   const [vehicleType, setVehicleType] = useState(null);
   const [ride, setRide] = useState(null);
+  const [activeRide, setActiveRide] = useState(null);
   const findTripSectionRef = useRef(null);
 
   const navigate = useNavigate();
 
   const { socket } = useContext(SocketContext);
   const { user } = useContext(UserDataContext);
+  // Check for active ride on component mount
+  useEffect(() => {
+    checkActiveRide();
+  }, []);
+
+  // Function to check if there's an active ride
+  const checkActiveRide = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/rides/get-active-ride`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      
+      if (response.status === 200 && response.data) {
+        setActiveRide(response.data);
+      }
+    } catch (error) {
+      console.log("No active ride found");
+    }
+  };
+
+  // Function to resume active ride
+  const resumeRide = () => {
+    if (activeRide) {
+      navigate("/riding", { state: { ride: activeRide } });
+    }
+  };
 
   useEffect(() => {
     socket.emit("join", { userType: "user", userId: user._id });
@@ -173,8 +205,12 @@ const Home = () => {
         },
       }
     );
+    console.log(response.data);
     setFare(response.data);
   }
+  useEffect(() => {
+  console.log('Fare state updated:', fare);
+}, [fare]);
 
 async function createRide() {
   // Also, in your Home component, add some debugging:
@@ -379,6 +415,27 @@ console.log('Selected vehicle type:', vehicleType); // Add this before createRid
           </button>
         </div>
       </header>
+      
+      {/* Active Ride Alert - NEW */}
+      {activeRide && (
+        <div className="bg-green-600 text-white px-4 py-3 flex items-center justify-between border-b border-green-700">
+          <div className="flex items-center space-x-3">
+            <div className="w-4 h-4 bg-white rounded-full animate-pulse"></div>
+            <div>
+              <h3 className="font-semibold">You have an active ride!</h3>
+              <p className="text-sm opacity-90">
+                {activeRide.status === 'accepted' ? 'Driver is on the way' : 'Trip in progress'}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={resumeRide}
+            className="bg-white text-green-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-all duration-200 hover:scale-105"
+          >
+            Resume Trip
+          </button>
+        </div>
+      )}
 
       {/* Map Section - Takes remaining space above find trip section */}
       <div className="flex-1 relative overflow-hidden">
@@ -548,6 +605,7 @@ console.log('Selected vehicle type:', vehicleType); // Add this before createRid
           setVehicleFound={setVehicleFound}
           setWaitingForDriver={setWaitingForDriver}
           waitingForDriver={waitingForDriver}
+          fare={fare[vehicleType]}
         />
       </div>
     </div>

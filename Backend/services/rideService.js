@@ -125,6 +125,19 @@ module.exports.startRide = async ({rideId,otp,captain}) => {
     return ride;
 }
 
+module.exports.getActiveRide = async (userId) => {
+    if (!userId) {
+        throw new Error('User ID is required');
+    }
+
+    const activeRide = await rideModel.findOne({
+        user: userId,
+        status: { $in: ['accepted', 'ongoing'] }
+    }).populate('user').populate('captain');
+
+    return activeRide;
+};
+
 module.exports.endRide = async ({rideId,captain}) => {
     if(!rideId)
     {

@@ -129,12 +129,6 @@ const CaptainRiding = () => {
         }}
         className="h-1/5 p-6 flex items-center justify-between relative bg-amber-500"
       >
-        <h5
-          onClick={() => {}}
-          className="p-1 text-center w-[95%] absolute top-0"
-        >
-          <i className="text-3xl text-gray-600 ri-arrow-up-wide-line"></i>
-        </h5>
         <div className="flex-1">
           <h4 className="text-lg font-semibold">
             {loading ? "Updating..." : formatDistance(distanceTime?.distance)}
@@ -160,7 +154,14 @@ const CaptainRiding = () => {
         ref={finishRidePanelRef}
         className="fixed w-full bg-black text-white z-10 translate-y-full bottom-0 px-3 py-10 pt-12"
       >
-        <FinishRide ride={rideData} setFinishRidePanel={setFinishRidePanel} distanceTime={distanceTime}/>
+        {/* Close Icon */}
+        
+
+        <FinishRide
+          ride={rideData}
+          setFinishRidePanel={setFinishRidePanel}
+          distanceTime={distanceTime}
+        />
       </div>
     </div>
   );
