@@ -334,7 +334,14 @@ useEffect(() => {
             </button>
           </div>
         )}
+      </div>
 
+      {/* Captain Details Section - Black theme */}
+      <div className="bg-black text-white border-t border-gray-800 shadow-lg flex-shrink-0 relative z-10">
+        <div className="p-4 lg:p-6">
+          <CaptainDetails />
+        </div>
+      </div>
 
       {/* Offline Overlay */}
         {!isOnline && (
@@ -357,14 +364,6 @@ useEffect(() => {
             </div>
           </div>
         )}
-      </div>
-
-      {/* Captain Details Section - Black theme */}
-      <div className="bg-black text-white border-t border-gray-800 shadow-lg flex-shrink-0 relative z-10">
-        <div className="p-4 lg:p-6">
-          <CaptainDetails />
-        </div>
-      </div>
 
       {/* Popup Overlay - Only show when popups are active */}
       {(ridePopUpPanel || confirmRidePopUpPanel) && (
