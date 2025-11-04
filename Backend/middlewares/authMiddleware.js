@@ -19,7 +19,7 @@ module.exports.authUser = async (req,res,next) => {//we are checking if the user
 
     if(isBlackListed)
     {
-        res.status(401).json({message: 'Unauthorized'});
+        return res.status(401).json({message: 'Unauthorized'});
     }
 
     //if token is found then we have to decode it.
@@ -27,6 +27,11 @@ module.exports.authUser = async (req,res,next) => {//we are checking if the user
         // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET); //it gives us the token which only have _id because we created that token with _id only.
         const user = await userModel.findById(decoded._id);//we find the user using that id
+
+        if(!user)
+        {
+            return res.status(401).json({message: 'User not found'});
+        }
 
         //set this user in request.user as we are accessing the user (get request)
         req.user = user;
@@ -50,7 +55,7 @@ module.exports.authCaptain = async (req,res,next) => {//we are checking if the u
 
     if(isBlackListed)
     {
-        res.status(401).json({message: 'Unauthorized'});
+        return res.status(401).json({message: 'Unauthorized'});
     }
 
     //if token is found then we have to decode it.
@@ -58,6 +63,11 @@ module.exports.authCaptain = async (req,res,next) => {//we are checking if the u
         // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET); //it gives us the token which only have _id because we created that token with _id only.
         const captain = await captainModel.findById(decoded._id);//we find the user using that id
+
+        if(!captain)
+        {
+            return res.status(401).json({message: 'Captain not found'});
+        }
 
         //set this user in request.user as we are accessing the user (get request)
         req.captain = captain;
